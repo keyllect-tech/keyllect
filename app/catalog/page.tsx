@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Search, 
@@ -24,7 +24,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { useSearchParams } from 'next/navigation'
 
-export default function CatalogPage() {
+function CatalogContent() {
   const searchParams = useSearchParams()
   const initialCategory = searchParams.get('category') || ''
   
@@ -328,5 +328,13 @@ export default function CatalogPage() {
       </main>
       <Footer />
     </>
+  )
+}
+
+export default function CatalogPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen pt-24 flex items-center justify-center">Loading...</div>}>
+      <CatalogContent />
+    </Suspense>
   )
 }
