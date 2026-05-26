@@ -1,7 +1,11 @@
 // Central API configuration
 // In production, NEXT_PUBLIC_API_URL should be set to your Koyeb backend URL
 // e.g. https://keyllect-api-xxxxx.koyeb.app
-const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || 'http://127.0.0.1:8000'
+let base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || 'http://127.0.0.1:8000';
+if (base.endsWith('/api')) {
+  base = base.slice(0, -4);
+}
+const API_BASE = base;
 
 export function apiUrl(path: string): string {
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
