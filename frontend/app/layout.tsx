@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
 import { ClientInit } from '@/components/client-init'
+import { Toaster } from 'sonner'
 import './globals.css'
 
 const inter = Inter({ 
@@ -157,7 +157,7 @@ export default function RootLayout({
       <body suppressHydrationWarning className={`${inter.variable} font-sans antialiased overflow-x-hidden`}>
         <ClientInit />
         {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        <Toaster position="top-center" />
       </body>
     </html>
   )
