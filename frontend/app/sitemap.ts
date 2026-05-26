@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import { MetadataRoute } from 'next'
 import { categories, products } from '@/lib/data'
 import { apiUrl } from '@/lib/api'
