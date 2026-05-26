@@ -47,4 +47,37 @@ class OrderSerializer(serializers.ModelSerializer):
         order = Order.objects.create(**validated_data)
         for item_data in items_data:
             OrderItem.objects.create(order=order, **item_data)
+            
+        # Send Telegram notification
+        try:
+            import os
+            import requests
+            import html
+            from django.conf import settings
+            os.environ.pop('SSLKEYLOGFILE', None)
+            
+            token = getattr(settings, 'TELEGRAM_BOT_TOKEN', None)
+            chat_id = getattr(settings, 'TELEGRAM_CHAT_ID', None)
+            
+            if token and chat_id:
+                safe_client = html.escape(str(order.client_name))
+                safe_phone = html.escape(str(order.phone))
+                safe_address = html.escape(str(order.address))
+                
+                items_text = "\n".join([f"• {html.escape(item.product.name)} × {item.quantity}" for item in order.items.all()])
+                text = f"🛒 <b>Новый заказ #{html.escape(order.order_number)}</b>\n\n" \
+                       f"👤 <b>Клиент:</b> {safe_client}\n" \
+                       f"📞 <b>Телефон:</b> {safe_phone}\n" \
+                       f"📍 <b>Адрес:</b> {safe_address}\n\n" \
+                       f"📦 <b>Товары:</b>\n{items_text}\n\n" \
+                       f"💰 <b>Сумма:</b> {order.total_amount:,.0f} сум"
+                       
+                requests.post(
+                    f"https://api.telegram.org/bot{token}/sendMessage",
+                    json={"chat_id": chat_id, "text": text, "parse_mode": "HTML"},
+                    timeout=5
+                )
+        except Exception as e:
+            print(f"Telegram Error: {e}")
+            
         return order

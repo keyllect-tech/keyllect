@@ -5,14 +5,13 @@ import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useStore } from '@/lib/store'
 import { getTranslation } from '@/lib/i18n'
-import { getPopularProducts } from '@/lib/data'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
 
 export function PopularProductsSection() {
-  const { locale } = useStore()
+  const { locale, products: storeProducts } = useStore()
   const t = getTranslation(locale)
-  const products = getPopularProducts()
+  const products = storeProducts.filter(p => p.isBestseller).slice(0, 4)
 
   return (
     <section id="popular" className="py-24 bg-card/30">

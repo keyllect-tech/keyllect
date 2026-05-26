@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, Suspense } from 'react'
+import { useState, useMemo, Suspense, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Search, 
@@ -17,64 +17,87 @@ import { useStore } from '@/lib/store'
 import { getTranslation, formatPrice } from '@/lib/i18n'
 import { 
   filterProducts, 
-  getAllBrands, 
   getPriceRange,
   categories 
 } from '@/lib/data'
 import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { useSearchParams } from 'next/navigation'
 
 function CatalogContent() {
   const searchParams = useSearchParams()
   const initialCategory = searchParams.get('category') || ''
   
-  const { locale } = useStore()
+  const initialQuery = searchParams.get('q') || ''
+  
+  const { locale, products, categories } = useStore()
   const t = getTranslation(locale)
   
   const [selectedCategory, setSelectedCategory] = useState(initialCategory)
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000000])
+
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 0])
   const [sortBy, setSortBy] = useState('popular')
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState(initialQuery)
   const [showFilters, setShowFilters] = useState(false)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+
+  useEffect(() => {
+    setSearchQuery(searchParams.get('q') || '')
+  }, [searchParams])
   
-  const allBrands = getAllBrands()
-  const { min: minPrice, max: maxPrice } = getPriceRange()
+
+  const { min: minPrice, max: maxPrice } = getPriceRange(products)
   
   const filteredProducts = useMemo(() => {
-    let products = filterProducts(
+    let result = filterProducts(
+      products,
       selectedCategory || undefined,
-      selectedBrands.length > 0 ? selectedBrands : undefined,
+      undefined,
       priceRange[0],
       priceRange[1],
       sortBy
     )
     
     if (searchQuery) {
-      const query = searchQuery.toLowerCase()
-      products = products.filter(
-        (p) =>
-          p.name.ru.toLowerCase().includes(query) ||
-          p.name.uz.toLowerCase().includes(query) ||
-          p.brand.toLowerCase().includes(query)
+      const query = searchQuery.toLowerCase().trim()
+      
+      const categoryKeywords: Record<string, string[]> = {
+        keyboards: ['клавиатура', 'клавиатуры', 'keyboard', 'klaviatura'],
+        mice: ['мышь', 'мыши', 'мышка', 'mouse', 'sichqoncha'],
+        mousepads: ['коврик', 'коврики', 'mousepad', 'gilamcha'],
+        headsets: ['наушник', 'наушники', 'гарнитура', 'headset', 'quloqchin'],
+      }
+
+      // Find which categories match the search query
+      const matchedCategorySlugs = Object.entries(categoryKeywords)
+        .filter(([_, keywords]) => keywords.some(k => k.includes(query) || query.includes(k)))
+        .map(([slug]) => slug)
+
+      result = result.filter(
+        (p) => {
+          return (
+            p.name.ru.toLowerCase().includes(query) ||
+            p.name.uz.toLowerCase().includes(query) ||
+            p.brand.toLowerCase().includes(query) ||
+            matchedCategorySlugs.includes(p.category)
+          )
+        }
       )
     }
     
-    return products
-  }, [selectedCategory, selectedBrands, priceRange, sortBy, searchQuery])
+    return result
+  }, [selectedCategory, priceRange, sortBy, searchQuery, products])
   
-  const toggleBrand = (brand: string) => {
-    setSelectedBrands((prev) =>
-      prev.includes(brand)
-        ? prev.filter((b) => b !== brand)
-        : [...prev, brand]
-    )
-  }
+
   
   const resetFilters = () => {
     setSelectedCategory('')
-    setSelectedBrands([])
     setPriceRange([0, 10000000])
     setSortBy('popular')
     setSearchQuery('')
@@ -134,19 +157,19 @@ function CatalogContent() {
               </Button>
 
               {/* Sort Dropdown */}
-              <div className="relative">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="h-12 pl-4 pr-10 rounded-xl bg-card border border-border text-foreground appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/50"
-                >
-                  {sortOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+              <div className="relative w-[200px]">
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-full h-12 rounded-xl bg-card border border-border">
+                    <SelectValue placeholder={t.products.sortOptions?.popular} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sortOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* View Mode Toggle */}
@@ -221,17 +244,19 @@ function CatalogContent() {
                 <div className="space-y-3">
                   <div className="flex gap-2">
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       placeholder="Min"
-                      value={priceRange[0] || ''}
-                      onChange={(e) => setPriceRange([Number(e.target.value) || 0, priceRange[1]])}
+                      value={priceRange[0] === 0 ? '' : Number.isNaN(priceRange[0]) ? '' : priceRange[0].toLocaleString('ru-RU')}
+                      onChange={(e) => setPriceRange([Number(e.target.value.replace(/\D/g, '')), priceRange[1]])}
                       className="w-full h-10 px-3 rounded-lg bg-card border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                     />
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       placeholder="Max"
-                      value={priceRange[1] || ''}
-                      onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value) || maxPrice])}
+                      value={priceRange[1] === 0 ? '' : Number.isNaN(priceRange[1]) ? '' : priceRange[1].toLocaleString('ru-RU')}
+                      onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value.replace(/\D/g, ''))])}
                       className="w-full h-10 px-3 rounded-lg bg-card border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                     />
                   </div>
@@ -241,38 +266,7 @@ function CatalogContent() {
                 </div>
               </div>
 
-              {/* Brands */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-foreground mb-3">{t.products.brand}</h3>
-                <div className="space-y-2">
-                  {allBrands.map((brand) => (
-                    <label
-                      key={brand}
-                      className="flex items-center gap-3 cursor-pointer group"
-                    >
-                      <div
-                        className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                          selectedBrands.includes(brand)
-                            ? 'bg-primary border-primary'
-                            : 'border-border group-hover:border-primary/50'
-                        }`}
-                      >
-                        {selectedBrands.includes(brand) && (
-                          <svg className="w-3 h-3 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
-                      </div>
-                      <span
-                        className="text-sm text-muted-foreground group-hover:text-foreground transition-colors"
-                        onClick={() => toggleBrand(brand)}
-                      >
-                        {brand}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </div>
+
 
               {/* Reset Filters */}
               <Button

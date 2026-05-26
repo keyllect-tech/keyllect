@@ -65,9 +65,9 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 tracking-tight"
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 tracking-tight leading-tight"
           >
-            <span className="gradient-text text-balance">{t.hero.title}</span>
+            <span className="gradient-text text-balance break-words">{t.hero.title}</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -75,7 +75,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto text-balance"
+            className="text-base sm:text-xl text-muted-foreground mb-8 sm:mb-10 max-w-2xl mx-auto text-balance px-2 sm:px-0"
           >
             {t.hero.subtitle}
           </motion.p>
@@ -109,7 +109,7 @@ export function HeroSection() {
           >
             {[
               { value: '5000+', label: locale === 'ru' ? 'Клиентов' : 'Mijozlar' },
-              { value: '50+', label: locale === 'ru' ? 'Брендов' : 'Brendlar' },
+              { value: '100+', label: locale === 'ru' ? 'Товаров' : 'Mahsulotlar' },
               { value: '24/7', label: locale === 'ru' ? 'Поддержка' : "Qo'llab-quvvatlash" },
             ].map((stat, i) => (
               <div key={i} className="text-center">

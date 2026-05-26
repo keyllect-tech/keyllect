@@ -15,13 +15,25 @@ import {
 import { useStore } from '@/lib/store'
 import { getTranslation, type Locale } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 
 export function Header() {
+  const router = useRouter()
   const { locale, setLocale, getCartCount, favorites } = useStore()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isSearchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/catalog?q=${encodeURIComponent(searchQuery.trim())}`)
+      setSearchOpen(false)
+      setMobileMenuOpen(false)
+      setSearchQuery('')
+    }
+  }
   const t = getTranslation(locale)
   const cartCount = getCartCount()
 
@@ -89,15 +101,19 @@ export function Header() {
                     exit={{ width: 0, opacity: 0 }}
                     className="relative"
                   >
-                    <input
-                      type="text"
-                      placeholder={t.nav.search}
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full h-10 pl-10 pr-4 rounded-lg bg-secondary/50 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground placeholder:text-muted-foreground"
-                      autoFocus
-                    />
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <form onSubmit={handleSearch}>
+                      <input
+                        type="text"
+                        placeholder={t.nav.search}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full h-10 pl-10 pr-4 rounded-lg bg-secondary/50 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground placeholder:text-muted-foreground"
+                        autoFocus
+                      />
+                      <button type="submit" aria-label="Submit search">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground cursor-pointer" />
+                      </button>
+                    </form>
                   </motion.div>
                 ) : null}
               </AnimatePresence>
@@ -107,6 +123,7 @@ export function Header() {
                 size="icon"
                 onClick={() => setSearchOpen(!isSearchOpen)}
                 className="text-muted-foreground hover:text-foreground"
+                aria-label="Toggle search"
               >
                 {isSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
               </Button>
@@ -125,11 +142,12 @@ export function Header() {
               </Button>
 
               {/* Favorites */}
-              <Link href="/favorites">
+              <Link href="/favorites" aria-label="Favorites">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-muted-foreground hover:text-foreground relative"
+                  className="text-muted-foreground hover:text-foreground relative min-w-[44px] min-h-[44px]"
+                  aria-label="Favorites"
                 >
                   <Heart className="w-5 h-5" />
                   {favorites.length > 0 && (
@@ -141,11 +159,12 @@ export function Header() {
               </Link>
 
               {/* Cart */}
-              <Link href="/cart">
+              <Link href="/cart" aria-label="Cart">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-muted-foreground hover:text-foreground relative"
+                  className="text-muted-foreground hover:text-foreground relative min-w-[44px] min-h-[44px]"
+                  aria-label="Cart"
                 >
                   <ShoppingCart className="w-5 h-5" />
                   {cartCount > 0 && (
@@ -157,11 +176,12 @@ export function Header() {
               </Link>
 
               {/* Account */}
-              <Link href="/account">
+              <Link href="/account" aria-label="Account">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground min-w-[44px] min-h-[44px]"
+                  aria-label="Account"
                 >
                   <User className="w-5 h-5" />
                 </Button>
@@ -170,11 +190,12 @@ export function Header() {
 
             {/* Mobile Actions */}
             <div className="flex lg:hidden items-center gap-2">
-              <Link href="/cart">
+              <Link href="/cart" aria-label="Cart">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-muted-foreground hover:text-foreground relative"
+                  className="text-muted-foreground hover:text-foreground relative min-w-[44px] min-h-[44px]"
+                  aria-label="Cart"
                 >
                   <ShoppingCart className="w-5 h-5" />
                   {cartCount > 0 && (
@@ -188,7 +209,8 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setMobileMenuOpen(true)}
-                className="text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground min-w-[44px] min-h-[44px]"
+                aria-label="Open menu"
               >
                 <Menu className="w-6 h-6" />
               </Button>
@@ -221,6 +243,8 @@ export function Header() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Close menu"
+                  className="min-w-[44px] min-h-[44px]"
                 >
                   <X className="w-6 h-6" />
                 </Button>
@@ -228,12 +252,18 @@ export function Header() {
 
               {/* Mobile Search */}
               <div className="relative mb-6">
-                <input
-                  type="text"
-                  placeholder={t.nav.search}
-                  className="w-full h-12 pl-12 pr-4 rounded-lg bg-secondary border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground placeholder:text-muted-foreground"
-                />
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <form onSubmit={handleSearch}>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={t.nav.search}
+                    className="w-full h-12 pl-12 pr-4 rounded-lg bg-secondary border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground placeholder:text-muted-foreground"
+                  />
+                  <button type="submit" aria-label="Submit search">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground cursor-pointer" />
+                  </button>
+                </form>
               </div>
 
               {/* Mobile Nav Links */}

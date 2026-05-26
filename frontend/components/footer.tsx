@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useStore } from '@/lib/store'
 import { getTranslation } from '@/lib/i18n'
-import { Send, MapPin, Phone, Mail } from 'lucide-react'
+import { MapPin, Phone, Mail } from 'lucide-react'
 
 export function Footer() {
   const { locale } = useStore()
@@ -53,7 +53,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Phone className="w-4 h-4 text-primary" />
-                <span>+998 71 123 45 67</span>
+                <span>+998 77 166 33 23</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Mail className="w-4 h-4 text-primary" />
@@ -111,27 +111,6 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
-
-        {/* Newsletter */}
-        <div className="mt-12 pt-8 border-t border-border">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div>
-              <h4 className="font-semibold text-foreground mb-1">{t.newsletter.title}</h4>
-              <p className="text-sm text-muted-foreground">{t.newsletter.subtitle}</p>
-            </div>
-            <div className="flex gap-2">
-              <input
-                type="email"
-                placeholder={t.newsletter.placeholder}
-                className="h-11 px-4 rounded-lg bg-secondary border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 w-full md:w-64 text-foreground placeholder:text-muted-foreground"
-              />
-              <button className="h-11 px-5 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors flex items-center gap-2">
-                <Send className="w-4 h-4" />
-                <span className="hidden sm:inline">{t.newsletter.button}</span>
-              </button>
-            </div>
           </div>
         </div>
 

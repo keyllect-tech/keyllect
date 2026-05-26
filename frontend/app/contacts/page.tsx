@@ -19,13 +19,13 @@ export default function ContactsPage() {
       icon: MapPin,
       title: t.contacts.address,
       value: t.contacts.addressValue,
-      link: 'https://maps.google.com/?q=Tashkent,Amir+Temur+Street,1',
+      link: 'https://maps.google.com/maps?q=41.201083,69.239000',
     },
     {
       icon: Phone,
       title: t.contacts.phone,
-      value: '+998 71 123 45 67',
-      link: 'tel:+998711234567',
+      value: '+998 77 166 33 23',
+      link: 'tel:+998771663323',
     },
     {
       icon: Mail,
@@ -232,16 +232,16 @@ export default function ContactsPage() {
             transition={{ delay: 0.4 }}
             className="mt-16 rounded-2xl overflow-hidden border border-border"
           >
-            <div className="aspect-[21/9] bg-card flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-                <p className="text-muted-foreground">
-                  {locale === 'ru' ? 'Карта будет здесь' : "Xarita shu yerda bo'ladi"}
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {t.contacts.addressValue}
-                </p>
-              </div>
+            <div className="aspect-[21/9] w-full bg-card">
+              <iframe 
+                src="https://maps.google.com/maps?q=41.201083,69.239000&z=16&output=embed" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen={true} 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
             </div>
           </motion.div>
         </div>

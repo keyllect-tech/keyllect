@@ -6,10 +6,9 @@ import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useStore } from '@/lib/store'
 import { getTranslation } from '@/lib/i18n'
-import { categories } from '@/lib/data'
 
 export function CategoriesSection() {
-  const { locale } = useStore()
+  const { locale, categories } = useStore()
   const t = getTranslation(locale)
 
   return (
@@ -29,7 +28,7 @@ export function CategoriesSection() {
         </motion.div>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {categories.map((category, index) => (
             <motion.div
               key={category.id}
@@ -39,7 +38,7 @@ export function CategoriesSection() {
               transition={{ delay: index * 0.1 }}
             >
               <Link
-                href={`/catalog?category=${category.slug}`}
+                href={`/category/${category.slug}`}
                 className="group relative block aspect-[4/3] rounded-2xl overflow-hidden"
               >
                 {/* Background Image */}

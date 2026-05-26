@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, ProductImage, Order, OrderItem
+from .models import Category, Product, ProductImage, Order, OrderItem, Customer
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -31,3 +31,8 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ('order_number', 'client_name', 'phone', 'telegram')
     inlines = [OrderItemInline]
     readonly_fields = ('order_number', 'total_amount', 'created_at')
+
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ('phone', 'user', 'raw_password')
+    search_fields = ('phone', 'user__username')

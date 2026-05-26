@@ -1,10 +1,10 @@
 from django.db import models
-from cloudinary.models import CloudinaryField
+from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=255, verbose_name="Название")
     slug = models.SlugField(max_length=255, unique=True)
-    image = CloudinaryField('image', blank=True, null=True)
+    image = models.ImageField(upload_to='categories/', blank=True, null=True, verbose_name="Изображение")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -36,7 +36,7 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
-    image = CloudinaryField('image')
+    image = models.ImageField(upload_to='products/', verbose_name="Изображение")
 
     class Meta:
         verbose_name = "Изображение товара"
@@ -56,6 +56,7 @@ class Order(models.Model):
     )
     
     order_number = models.CharField(max_length=50, unique=True, verbose_name="Номер заказа")
+    customer = models.ForeignKey('Customer', on_delete=models.SET_NULL, null=True, blank=True, related_name='orders', verbose_name="Клиент аккаунта")
     client_name = models.CharField(max_length=255, verbose_name="Имя клиента")
     phone = models.CharField(max_length=50, verbose_name="Телефон")
     telegram = models.CharField(max_length=255, blank=True, null=True, verbose_name="Telegram username")
@@ -83,3 +84,15 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
+
+class Customer(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer', verbose_name="Пользователь")
+    phone = models.CharField(max_length=50, unique=True, blank=True, null=True, verbose_name="Телефон/Email")
+    raw_password = models.CharField(max_length=255, blank=True, null=True, verbose_name="Пароль (для восстановления)")
+    
+    class Meta:
+        verbose_name = "Покупатель"
+        verbose_name_plural = "Покупатели"
+
+    def __str__(self):
+        return f"{self.phone} ({self.user.username})"

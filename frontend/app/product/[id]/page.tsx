@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, use } from 'react'
+import { useState, useEffect, use } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -13,7 +13,8 @@ import {
   ChevronLeft,
   Truck,
   Shield,
-  RotateCcw
+  RotateCcw,
+  CheckCircle
 } from 'lucide-react'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
@@ -21,6 +22,7 @@ import { ProductCard } from '@/components/product-card'
 import { useStore } from '@/lib/store'
 import { getTranslation, formatPrice } from '@/lib/i18n'
 import { getProductById, getProductsByCategory } from '@/lib/data'
+import { apiUrl } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { notFound } from 'next/navigation'
 
@@ -30,13 +32,14 @@ interface ProductPageProps {
 
 export default function ProductPage({ params }: ProductPageProps) {
   const { id } = use(params)
-  const product = getProductById(id)
+  const { locale, addToCart, toggleFavorite, isFavorite, products } = useStore()
+  
+  const product = getProductById(products, id)
   
   if (!product) {
     notFound()
   }
   
-  const { locale, addToCart, toggleFavorite, isFavorite } = useStore()
   const t = getTranslation(locale)
   
   const [selectedImage, setSelectedImage] = useState(0)
@@ -44,12 +47,64 @@ export default function ProductPage({ params }: ProductPageProps) {
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description')
   
   const isProductFavorite = isFavorite(product.id)
-  const relatedProducts = getProductsByCategory(product.category)
+  const relatedProducts = getProductsByCategory(products, product.category)
     .filter((p) => p.id !== product.id)
     .slice(0, 4)
 
+  const [isReviewing, setIsReviewing] = useState(false)
+  const [reviewName, setReviewName] = useState('')
+  const [reviewText, setReviewText] = useState('')
+  const [reviewRating, setReviewRating] = useState(5)
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false)
+  const [reviewSubmitted, setReviewSubmitted] = useState(false)
+  const [localReviews, setLocalReviews] = useState<any[]>([])
+
+  useEffect(() => {
+    const saved = localStorage.getItem(`reviews_${product.id}`)
+    if (saved) {
+      try {
+        setLocalReviews(JSON.parse(saved))
+      } catch (e) {}
+    }
+  }, [product.id])
+
   const handleAddToCart = () => {
     addToCart(product, quantity)
+  }
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmittingReview(true)
+    try {
+      await fetch(apiUrl('/api/submit-review/'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product_name: product.name[locale],
+          name: reviewName,
+          review: reviewText,
+          rating: reviewRating
+        })
+      })
+      
+      const newReview = {
+        name: reviewName,
+        review: reviewText,
+        rating: reviewRating,
+        date: new Date().toISOString()
+      }
+      const updatedReviews = [...localReviews, newReview]
+      setLocalReviews(updatedReviews)
+      localStorage.setItem(`reviews_${product.id}`, JSON.stringify(updatedReviews))
+      
+      setReviewSubmitted(true)
+      setIsReviewing(false)
+    } catch (err) {
+      console.error('Failed to submit review:', err)
+      alert(locale === 'ru' ? 'Ошибка отправки отзыва' : 'Xatolik yuz berdi')
+    } finally {
+      setIsSubmittingReview(false)
+    }
   }
 
   return (
@@ -333,13 +388,118 @@ export default function ProductPage({ params }: ProductPageProps) {
             )}
 
             {activeTab === 'reviews' && (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground mb-4">
-                  {locale === 'ru' ? 'Отзывы скоро появятся' : "Sharhlar tez orada paydo bo'ladi"}
-                </p>
-                <Button variant="outline" className="rounded-xl">
-                  {t.reviews.writeReview}
-                </Button>
+              <div className="py-4">
+                {reviewSubmitted ? (
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle className="w-8 h-8 text-green-500" />
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground mb-2">
+                      {locale === 'ru' ? 'Спасибо за отзыв!' : 'Sharhingiz uchun rahmat!'}
+                    </h3>
+                    <p className="text-muted-foreground">
+                      {locale === 'ru' ? 'Ваш отзыв успешно отправлен.' : 'Sharhingiz muvaffaqiyatli yuborildi.'}
+                    </p>
+                  </div>
+                ) : isReviewing ? (
+                  <form onSubmit={handleSubmitReview} className="max-w-2xl mx-auto space-y-6">
+                    <h3 className="text-xl font-bold text-foreground">
+                      {t.reviews.writeReview}
+                    </h3>
+                    
+                    <div className="flex gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          type="button"
+                          key={star}
+                          onClick={() => setReviewRating(star)}
+                          className="focus:outline-none"
+                        >
+                          <Star className={`w-8 h-8 ${star <= reviewRating ? 'text-amber-400 fill-amber-400' : 'text-muted-foreground'}`} />
+                        </button>
+                      ))}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-muted-foreground mb-2">
+                        {locale === 'ru' ? 'Ваше имя' : 'Ismingiz'}
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={reviewName}
+                        onChange={e => setReviewName(e.target.value)}
+                        className="w-full h-12 px-4 rounded-xl bg-secondary border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-muted-foreground mb-2">
+                        {locale === 'ru' ? 'Отзыв' : 'Sharhingiz'}
+                      </label>
+                      <textarea
+                        required
+                        value={reviewText}
+                        onChange={e => setReviewText(e.target.value)}
+                        rows={4}
+                        className="w-full p-4 rounded-xl bg-secondary border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+                      />
+                    </div>
+
+                    <div className="flex gap-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setIsReviewing(false)}
+                        className="flex-1 rounded-xl h-12"
+                      >
+                        {t.common.cancel}
+                      </Button>
+                      <Button
+                        type="submit"
+                        disabled={isSubmittingReview}
+                        className="flex-1 rounded-xl h-12 neon-glow"
+                      >
+                        {isSubmittingReview ? '...' : (locale === 'ru' ? 'Отправить' : 'Yuborish')}
+                      </Button>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="space-y-8">
+                    {localReviews.length > 0 ? (
+                      <div className="space-y-6 text-left">
+                        {localReviews.map((rev, idx) => (
+                          <div key={idx} className="p-6 rounded-2xl bg-secondary/50 border border-border">
+                            <div className="flex justify-between items-start mb-4">
+                              <div>
+                                <h4 className="font-bold text-foreground">{rev.name}</h4>
+                                <span className="text-xs text-muted-foreground">{new Date(rev.date).toLocaleDateString()}</span>
+                              </div>
+                              <div className="flex">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <Star key={star} className={`w-4 h-4 ${star <= rev.rating ? 'text-amber-400 fill-amber-400' : 'text-muted-foreground'}`} />
+                                ))}
+                              </div>
+                            </div>
+                            <p className="text-foreground whitespace-pre-wrap">{rev.review}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground mb-4">
+                          {locale === 'ru' ? 'Отзывы скоро появятся' : "Sharhlar tez orada paydo bo'ladi"}
+                        </p>
+                      </div>
+                    )}
+                    
+                    <div className="text-center">
+                      <Button onClick={() => setIsReviewing(true)} variant="outline" className="rounded-xl">
+                        {t.reviews.writeReview}
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </motion.div>

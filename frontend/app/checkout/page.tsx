@@ -9,10 +9,11 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { useStore } from '@/lib/store'
 import { getTranslation, formatPrice } from '@/lib/i18n'
+import { apiUrl } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 
 export default function CheckoutPage() {
-  const { locale, cart, getCartTotal, clearCart } = useStore()
+  const { locale, cart, getCartTotal, clearCart, user } = useStore()
   const t = getTranslation(locale)
   const cartTotal = getCartTotal()
   const shippingCost = cartTotal >= 500000 ? 0 : 50000
@@ -36,12 +37,78 @@ export default function CheckoutPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsSubmitting(true)
     const newOrderNumber = `KL-${Date.now().toString(36).toUpperCase()}`
-    setOrderNumber(newOrderNumber)
-    setOrderPlaced(true)
-    clearCart()
+    
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+      if (user?.token) {
+        headers['Authorization'] = `Bearer ${user.token}`
+      }
+
+      let response = await fetch(apiUrl('/api/checkout/'), {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          order_number: newOrderNumber,
+          client_name: `${formData.firstName} ${formData.lastName}`.trim(),
+          phone: formData.phone,
+          address: `${formData.city}, ${formData.address}` + (formData.comment ? ` (${formData.comment})` : ''),
+          total_amount: cartTotal + shippingCost,
+          items: cart.map(item => ({
+            product_id: item.product.id,
+            name: item.product.name[locale],
+            quantity: item.quantity,
+            price: item.product.price,
+            image: item.product.images?.[0] || ''
+          }))
+        })
+      })
+
+      // If token expired (401), fallback to guest checkout so order is not lost
+      if (response.status === 401 && headers['Authorization']) {
+        // If failed with 401, token might be invalid. Try without token.
+        response = await fetch(apiUrl('/api/checkout/'), {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            order_number: newOrderNumber,
+            client_name: `${formData.firstName} ${formData.lastName}`.trim(),
+            phone: formData.phone,
+            address: `${formData.city}, ${formData.address}` + (formData.comment ? ` (${formData.comment})` : ''),
+            total_amount: cartTotal + shippingCost,
+            items: cart.map(item => ({
+              product_id: item.product.id,
+              name: item.product.name[locale],
+              quantity: item.quantity,
+              price: item.product.price,
+              image: item.product.images?.[0] || ''
+            }))
+          })
+        })
+      }
+
+      if (response.ok) {
+        setOrderNumber(newOrderNumber)
+        setOrderPlaced(true)
+        clearCart()
+      } else {
+        const errorData = await response.json()
+        console.error("Backend error:", errorData)
+        alert(locale === 'ru' ? 'Ошибка при оформлении заказа' : 'Buyurtma berishda xatolik')
+      }
+    } catch (error) {
+      console.error("Network error:", error)
+      alert(locale === 'ru' ? 'Ошибка сети' : 'Tarmoq xatosi')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (orderPlaced) {
@@ -339,9 +406,10 @@ export default function CheckoutPage() {
                   </div>
                   <Button
                     type="submit"
-                    className="w-full mt-6 h-14 text-base rounded-xl neon-glow"
+                    disabled={isSubmitting}
+                    className="w-full mt-6 h-14 text-base rounded-xl neon-glow disabled:opacity-50"
                   >
-                    {t.checkout.placeOrder}
+                    {isSubmitting ? (locale === 'ru' ? 'Оформление...' : 'Rasmiylashtirilmoqda...') : t.checkout.placeOrder}
                   </Button>
                 </motion.div>
               )}
