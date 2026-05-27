@@ -1,5 +1,3 @@
-export const runtime = 'edge';
-
 export default function PrivacyPage() {
   return (
     <div className="container mx-auto py-20 px-4 mt-20">
