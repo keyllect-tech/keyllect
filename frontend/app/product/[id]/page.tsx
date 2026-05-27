@@ -32,9 +32,17 @@ interface ProductPageProps {
 
 export default function ProductPage({ params }: ProductPageProps) {
   const { id } = use(params)
-  const { locale, addToCart, toggleFavorite, isFavorite, products } = useStore()
+  const { locale, addToCart, toggleFavorite, isFavorite, products, isLoading } = useStore()
   
   const product = getProductById(products, id)
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center pt-20">
+        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    )
+  }
   
   if (!product) {
     notFound()
