@@ -67,28 +67,19 @@ function CatalogContent() {
     if (searchQuery) {
       const query = searchQuery.toLowerCase().trim()
       
-      const categoryKeywords: Record<string, string[]> = {
-        keyboards: ['клавиатура', 'клавиатуры', 'keyboard', 'klaviatura'],
-        mice: ['мышь', 'мыши', 'мышка', 'mouse', 'sichqoncha'],
-        mousepads: ['коврик', 'коврики', 'mousepad', 'gilamcha'],
-        headsets: ['наушник', 'наушники', 'гарнитура', 'headset', 'quloqchin'],
-      }
-
-      // Find which categories match the search query
-      const matchedCategorySlugs = Object.entries(categoryKeywords)
-        .filter(([_, keywords]) => keywords.some(k => k.includes(query) || query.includes(k)))
-        .map(([slug]) => slug)
-
-      result = result.filter(
-        (p) => {
-          return (
-            p.name.ru.toLowerCase().includes(query) ||
-            p.name.uz.toLowerCase().includes(query) ||
-            p.brand.toLowerCase().includes(query) ||
-            matchedCategorySlugs.includes(p.category)
-          )
-        }
-      )
+      result = result.filter((p) => {
+        const cat = categories.find(c => c.slug === p.category || String(c.id) === p.category)
+        const categoryNameRu = cat?.name?.ru?.toLowerCase() || ''
+        const categoryNameUz = cat?.name?.uz?.toLowerCase() || ''
+        
+        return (
+          p.name.ru.toLowerCase().includes(query) ||
+          p.name.uz.toLowerCase().includes(query) ||
+          p.brand.toLowerCase().includes(query) ||
+          categoryNameRu.includes(query) ||
+          categoryNameUz.includes(query)
+        )
+      })
     }
     
     return result
