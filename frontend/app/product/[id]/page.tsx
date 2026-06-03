@@ -343,7 +343,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               {[
                 { key: 'description', label: t.products.description },
                 { key: 'specs', label: t.products.characteristics },
-                { key: 'reviews', label: `${t.reviews.title} ({(product.reviewsCount || 0) + localReviews.length})` },
+                { key: 'reviews', label: `${t.reviews.title} (${(product.reviewsCount || 0) + localReviews.length})` },
               ].map((tab) => (
                 <button
                   key={tab.key}
