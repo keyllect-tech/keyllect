@@ -48,7 +48,9 @@ function CatalogContent() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
   useEffect(() => {
-    setSearchQuery(searchParams.get('q') || '')
+    const q = searchParams.get('q')
+    setSearchQuery(q || '')
+    if (q) setSelectedCategory('')
   }, [searchParams])
   
 
@@ -129,7 +131,10 @@ function CatalogContent() {
                 type="text"
                 placeholder={t.nav.search}
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  setSelectedCategory('')
+                }}
                 className="w-full h-12 pl-12 pr-4 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
