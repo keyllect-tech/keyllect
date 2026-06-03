@@ -246,7 +246,7 @@ export default function AccountPage() {
                       </div>
 
                       <div className="mt-6 flex justify-center">
-                        <GoogleOAuthProvider clientId="736910345295-lirablhkho160jjet5e83hnoiv5j56i6.apps.googleusercontent.com">
+                        <GoogleOAuthProvider clientId="407270703173-nn5o8ph8phi95649aqk4r4oft9j70phe.apps.googleusercontent.com">
                           <GoogleLogin
                             onSuccess={handleGoogleSuccess}
                             onError={() => setError('Google Login Failed')}
