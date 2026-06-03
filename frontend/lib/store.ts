@@ -151,7 +151,7 @@ export const useStore = create<StoreState>()((set, get) => ({
 
       const parsedCategories: Category[] = rawCategories.map((c: any) => ({
         id: String(c.id),
-        name: { ru: c.name, uz: c.name },
+        name: { ru: c.name, uz: c.name_uz || c.name },
         slug: c.slug,
         image: c.image ? mediaUrl(c.image) : 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=400&h=300&fit=crop',
         productCount: 0
@@ -164,8 +164,8 @@ export const useStore = create<StoreState>()((set, get) => ({
 
         return {
           id: String(p.id),
-          name: { ru: p.name, uz: p.name },
-          description: { ru: p.description, uz: p.description },
+          name: { ru: p.name, uz: p.name_uz || p.name },
+          description: { ru: p.description, uz: p.description_uz || p.description },
           price: Number(p.price),
           originalPrice: p.old_price ? Number(p.old_price) : undefined,
           images: p.images?.length > 0 
@@ -178,7 +178,13 @@ export const useStore = create<StoreState>()((set, get) => ({
           inStock: p.in_stock,
           isBestseller: false,
           isNew: true,
-          specifications: []
+          specifications: p.characteristics ? Object.entries(p.characteristics).map(([key, value]) => {
+            const uzValue = p.characteristics_uz ? p.characteristics_uz[key] : undefined;
+            return {
+              label: { ru: key, uz: key }, // Key stays same or we can assume it's just the label
+              value: { ru: String(value), uz: uzValue ? String(uzValue) : String(value) }
+            };
+          }) : []
         }
       })
 
