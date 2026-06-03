@@ -7,18 +7,21 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductImageSerializer(serializers.ModelSerializer):
-    image_url = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = ProductImage
-        fields = ['id', 'image_url']
+        fields = ['id', 'image']
 
-    def get_image_url(self, obj):
+    def get_image(self, obj):
         return obj.image.url if obj.image else None
 
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     category_details = CategorySerializer(source='category', read_only=True)
+    category_slug = serializers.SlugRelatedField(
+        source='category', slug_field='slug', read_only=True
+    )
 
     class Meta:
         model = Product

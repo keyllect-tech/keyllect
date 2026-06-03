@@ -100,12 +100,12 @@ export const reviews: Review[] = [
   },
 ]
 
-export function getProductById(id: string): Product | undefined {
-  return products.find((p) => p.id === id)
+export function getProductById(productsArr: Product[], id: string): Product | undefined {
+  return productsArr.find((p) => p.id === id)
 }
 
-export function getProductsByCategory(category: string): Product[] {
-  return products.filter((p) => p.category === category)
+export function getProductsByCategory(productsArr: Product[], category: string): Product[] {
+  return productsArr.filter((p) => p.category === category)
 }
 
 export function getPopularProducts(): Product[] {

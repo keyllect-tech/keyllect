@@ -158,9 +158,9 @@ export const useStore = create<StoreState>()((set, get) => ({
       }))
 
       const parsedProducts: Product[] = rawProducts.map((p: any) => {
-        let categorySlug = 'unknown'
+        let categorySlug = p.category_slug || 'unknown'
         if (typeof p.category === 'object' && p.category) categorySlug = p.category.slug || String(p.category.id)
-        else if (p.category) categorySlug = String(p.category)
+        else if (p.category && !p.category_slug) categorySlug = String(p.category)
 
         return {
           id: String(p.id),

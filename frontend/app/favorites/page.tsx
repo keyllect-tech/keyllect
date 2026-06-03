@@ -12,11 +12,11 @@ import { getProductById } from '@/lib/data'
 import { Button } from '@/components/ui/button'
 
 export default function FavoritesPage() {
-  const { locale, favorites } = useStore()
+  const { locale, favorites, products: storeProducts } = useStore()
   const t = getTranslation(locale)
   
   const favoriteProducts = favorites
-    .map((id) => getProductById(id))
+    .map((id) => getProductById(storeProducts, id))
     .filter((p): p is NonNullable<typeof p> => p !== undefined)
 
   return (
