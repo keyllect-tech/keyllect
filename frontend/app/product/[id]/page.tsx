@@ -36,6 +36,31 @@ export default function ProductPage({ params }: ProductPageProps) {
   
   const product = getProductById(products, id)
   
+  const t = getTranslation(locale)
+  
+  const [selectedImage, setSelectedImage] = useState(0)
+  const [quantity, setQuantity] = useState(1)
+  const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description')
+  
+  const [isReviewing, setIsReviewing] = useState(false)
+  const [reviewName, setReviewName] = useState('')
+  const [reviewText, setReviewText] = useState('')
+  const [reviewRating, setReviewRating] = useState(5)
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false)
+  const [reviewSubmitted, setReviewSubmitted] = useState(false)
+  const [localReviews, setLocalReviews] = useState<any[]>([])
+
+  useEffect(() => {
+    if (product?.id) {
+      const saved = localStorage.getItem(`reviews_${product.id}`)
+      if (saved) {
+        try {
+          setLocalReviews(JSON.parse(saved))
+        } catch (e) {}
+      }
+    }
+  }, [product?.id])
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20">
@@ -48,33 +73,10 @@ export default function ProductPage({ params }: ProductPageProps) {
     notFound()
   }
   
-  const t = getTranslation(locale)
-  
-  const [selectedImage, setSelectedImage] = useState(0)
-  const [quantity, setQuantity] = useState(1)
-  const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description')
-  
   const isProductFavorite = isFavorite(product.id)
   const relatedProducts = getProductsByCategory(products, product.category)
     .filter((p) => p.id !== product.id)
     .slice(0, 4)
-
-  const [isReviewing, setIsReviewing] = useState(false)
-  const [reviewName, setReviewName] = useState('')
-  const [reviewText, setReviewText] = useState('')
-  const [reviewRating, setReviewRating] = useState(5)
-  const [isSubmittingReview, setIsSubmittingReview] = useState(false)
-  const [reviewSubmitted, setReviewSubmitted] = useState(false)
-  const [localReviews, setLocalReviews] = useState<any[]>([])
-
-  useEffect(() => {
-    const saved = localStorage.getItem(`reviews_${product.id}`)
-    if (saved) {
-      try {
-        setLocalReviews(JSON.parse(saved))
-      } catch (e) {}
-    }
-  }, [product.id])
 
   const handleAddToCart = () => {
     addToCart(product, quantity)
