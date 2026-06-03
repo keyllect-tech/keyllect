@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useSearchParams } from 'next/navigation'
+
 
 function CatalogContent() {
   const searchParams = useSearchParams()
