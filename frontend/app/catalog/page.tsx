@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo, Suspense, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Search, 
@@ -46,6 +47,7 @@ function CatalogContent() {
   const [searchQuery, setSearchQuery] = useState(initialQuery)
   const [showFilters, setShowFilters] = useState(false)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const router = useRouter()
 
   useEffect(() => {
     const q = searchParams.get('q')
@@ -132,12 +134,27 @@ function CatalogContent() {
                 placeholder={t.nav.search}
                 value={searchQuery}
                 onChange={(e) => {
-                  setSearchQuery(e.target.value)
+                  const val = e.target.value
+                  setSearchQuery(val)
                   setSelectedCategory('')
+                  if (!val) {
+                    router.replace('/catalog')
+                  }
                 }}
-                className="w-full h-12 pl-12 pr-4 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full h-12 pl-12 pr-12 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              {searchQuery && (
+                <button
+                  onClick={() => {
+                    setSearchQuery('')
+                    router.replace('/catalog')
+                  }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              )}
             </div>
 
             {/* Controls */}
