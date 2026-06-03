@@ -232,7 +232,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                   ))}
                 </div>
                 <span className="text-muted-foreground">
-                  {product.rating} ({product.reviewsCount} {t.products.reviews})
+                  {product.rating} ({(product.reviewsCount || 0) + localReviews.length} {t.products.reviews})
                 </span>
               </div>
 
@@ -343,7 +343,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               {[
                 { key: 'description', label: t.products.description },
                 { key: 'specs', label: t.products.characteristics },
-                { key: 'reviews', label: `${t.reviews.title} (${product.reviewsCount})` },
+                { key: 'reviews', label: `${t.reviews.title} ({(product.reviewsCount || 0) + localReviews.length})` },
               ].map((tab) => (
                 <button
                   key={tab.key}
