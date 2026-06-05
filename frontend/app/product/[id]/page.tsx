@@ -85,6 +85,13 @@ export default function ProductPage({ params }: ProductPageProps) {
     .filter((p) => p.id !== product.id)
     .slice(0, 4)
 
+  const totalReviewsCount = (product.reviewsCount || 0) + localReviews.length;
+  const currentTotalRating = (product.rating || 0) * (product.reviewsCount || 0);
+  const localTotalRating = localReviews.reduce((acc, rev) => acc + rev.rating, 0);
+  const displayRating = totalReviewsCount > 0 
+    ? (currentTotalRating + localTotalRating) / totalReviewsCount 
+    : 0;
+
   const handleAddToCart = () => {
     addToCart(product, quantity, selectedColor)
   }
@@ -233,7 +240,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                     <Star
                       key={i}
                       className={`w-5 h-5 ${
-                        i < Math.floor(product.rating)
+                        i < Math.floor(displayRating)
                           ? 'text-amber-400 fill-amber-400'
                           : 'text-muted-foreground'
                       }`}
@@ -241,7 +248,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                   ))}
                 </div>
                 <span className="text-muted-foreground">
-                  {product.rating} ({(product.reviewsCount || 0) + localReviews.length} {t.products.reviews})
+                  {displayRating > 0 ? displayRating.toFixed(1) : 0} ({totalReviewsCount} {t.products.reviews})
                 </span>
               </div>
 
