@@ -64,7 +64,7 @@ export default function CartPage() {
                 <AnimatePresence>
                   {cart.map((item) => (
                     <motion.div
-                      key={item.product.id}
+                      key={item.id}
                       layout
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -95,9 +95,14 @@ export default function CartPage() {
                                 {item.product.name[locale]}
                               </h3>
                             </Link>
+                            {item.selectedColor && (
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {locale === 'ru' ? 'Цвет:' : 'Rang:'} {item.selectedColor}
+                              </p>
+                            )}
                           </div>
                           <button
-                            onClick={() => removeFromCart(item.product.id)}
+                            onClick={() => removeFromCart(item.id)}
                             className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
                           >
                             <X className="w-4 h-4" />
@@ -108,14 +113,14 @@ export default function CartPage() {
                           {/* Quantity */}
                           <div className="flex items-center gap-2">
                             <button
-                              onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
                               className="w-8 h-8 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
                             >
                               <Minus className="w-3 h-3" />
                             </button>
                             <span className="w-8 text-center font-medium">{item.quantity}</span>
                             <button
-                              onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
                               className="w-8 h-8 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
                             >
                               <Plus className="w-3 h-3" />

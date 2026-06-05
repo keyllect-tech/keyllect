@@ -66,7 +66,8 @@ export default function CheckoutPage() {
             name: item.product.name[locale],
             quantity: item.quantity,
             price: item.product.price,
-            image: item.product.images?.[0] || ''
+            image: item.product.images?.[0] || '',
+            selectedColor: item.selectedColor || ''
           }))
         })
       })
@@ -429,7 +430,7 @@ export default function CheckoutPage() {
                 {/* Items */}
                 <div className="space-y-3 mb-4 max-h-60 overflow-auto">
                   {cart.map((item) => (
-                    <div key={item.product.id} className="flex gap-3">
+                    <div key={item.id} className="flex gap-3">
                       <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-secondary flex-shrink-0">
                         <Image
                           src={item.product.images[0]}
@@ -444,6 +445,7 @@ export default function CheckoutPage() {
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {item.quantity} x {formatPrice(item.product.price, locale)}
+                          {item.selectedColor && ` · ${item.selectedColor}`}
                         </p>
                       </div>
                     </div>

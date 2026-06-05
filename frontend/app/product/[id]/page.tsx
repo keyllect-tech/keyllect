@@ -41,6 +41,13 @@ export default function ProductPage({ params }: ProductPageProps) {
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description')
+  const [selectedColor, setSelectedColor] = useState('')
+
+  useEffect(() => {
+    if (product?.colors && product.colors.length > 0 && !selectedColor) {
+      setSelectedColor(product.colors[0])
+    }
+  }, [product?.colors])
   
   const [isReviewing, setIsReviewing] = useState(false)
   const [reviewName, setReviewName] = useState('')
@@ -79,7 +86,7 @@ export default function ProductPage({ params }: ProductPageProps) {
     .slice(0, 4)
 
   const handleAddToCart = () => {
-    addToCart(product, quantity)
+    addToCart(product, quantity, selectedColor)
   }
 
   const handleSubmitReview = async (e: React.FormEvent) => {
@@ -257,6 +264,24 @@ export default function ProductPage({ params }: ProductPageProps) {
                   {product.inStock ? t.products.inStock : t.products.outOfStock}
                 </span>
               </div>
+
+              {/* Colors */}
+              {product.colors && product.colors.length > 0 && (
+                <div className="flex flex-col gap-2">
+                  <span className="text-sm text-muted-foreground">{locale === 'ru' ? 'Выбор цвета:' : 'Rang tanlash:'}</span>
+                  <div className="flex flex-wrap gap-2">
+                    {product.colors.map(color => (
+                      <button
+                        key={color}
+                        onClick={() => setSelectedColor(color)}
+                        className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${selectedColor === color ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:border-primary/50 text-foreground'}`}
+                      >
+                        {color}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Quantity */}
               <div className="flex items-center gap-4">

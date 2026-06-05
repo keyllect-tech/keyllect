@@ -147,7 +147,16 @@ class CheckoutAPIView(APIView):
             # We skip creating OrderItems in DB because frontend uses mock data
             # Instead, we directly parse items for Telegram
             items = data.get('items', [])
-            items_text = "\n".join([f"• {item.get('name', 'Товар')} × {item.get('quantity', 1)}" for item in items])
+            
+            items_list = []
+            for item in items:
+                name = item.get('name', 'Товар')
+                color = item.get('selectedColor')
+                qty = item.get('quantity', 1)
+                color_text = f" ({color})" if color else ""
+                items_list.append(f"• {name}{color_text} × {qty}")
+            
+            items_text = "\n".join(items_list)
             
             # Send Telegram notification
             import os

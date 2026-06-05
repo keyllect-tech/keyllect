@@ -4,8 +4,10 @@ import type { Product, Category } from './data'
 import { apiUrl, mediaUrl } from './api'
 
 export interface CartItem {
+  id: string
   product: Product
   quantity: number
+  selectedColor?: string
 }
 
 interface User {
@@ -25,9 +27,9 @@ interface StoreState {
   
   // Cart
   cart: CartItem[]
-  addToCart: (product: Product, quantity?: number) => void
-  removeFromCart: (productId: string) => void
-  updateQuantity: (productId: string, quantity: number) => void
+  addToCart: (product: Product, quantity?: number, selectedColor?: string) => void
+  removeFromCart: (itemId: string) => void
+  updateQuantity: (itemId: string, quantity: number) => void
   clearCart: () => void
   getCartTotal: () => number
   getCartCount: () => number
@@ -73,33 +75,34 @@ export const useStore = create<StoreState>()((set, get) => ({
   
   // Cart
   cart: [],
-  addToCart: (product, quantity = 1) => {
+  addToCart: (product, quantity = 1, selectedColor) => {
     const cart = get().cart
-    const existingItem = cart.find((item) => item.product.id === product.id)
+    const itemId = selectedColor ? `${product.id}-${selectedColor}` : product.id;
+    const existingItem = cart.find((item) => item.id === itemId)
     
     if (existingItem) {
       set({
         cart: cart.map((item) =>
-          item.product.id === product.id
+          item.id === itemId
             ? { ...item, quantity: item.quantity + quantity }
             : item
         ),
       })
     } else {
-      set({ cart: [...cart, { product, quantity }] })
+      set({ cart: [...cart, { id: itemId, product, quantity, selectedColor }] })
     }
   },
-  removeFromCart: (productId) => {
-    set({ cart: get().cart.filter((item) => item.product.id !== productId) })
+  removeFromCart: (itemId) => {
+    set({ cart: get().cart.filter((item) => item.id !== itemId) })
   },
-  updateQuantity: (productId, quantity) => {
+  updateQuantity: (itemId, quantity) => {
     if (quantity <= 0) {
-      get().removeFromCart(productId)
+      get().removeFromCart(itemId)
       return
     }
     set({
       cart: get().cart.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
+        item.id === itemId ? { ...item, quantity } : item
       ),
     })
   },
@@ -184,7 +187,8 @@ export const useStore = create<StoreState>()((set, get) => ({
               label: { ru: key, uz: key }, // Key stays same or we can assume it's just the label
               value: { ru: String(value), uz: uzValue ? String(uzValue) : String(value) }
             };
-          }) : []
+          }) : [],
+          colors: p.colors ? p.colors.split(',').map((c: string) => c.trim()) : []
         }
       })
 

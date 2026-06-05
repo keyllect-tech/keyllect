@@ -18,6 +18,7 @@ export interface Product {
   inStock: boolean
   isNew?: boolean
   isBestseller?: boolean
+  colors?: string[]
   specifications: {
     key: { ru: string; uz: string }
     value: { ru: string; uz: string }
