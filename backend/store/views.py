@@ -180,14 +180,33 @@ class CheckoutAPIView(APIView):
                        f"📦 <b>Товары:</b>\n{items_text}\n\n" \
                        f"💰 <b>Сумма:</b> {order.total_amount:,.0f} сум"
                 
-                # Check if we have an image
-                image_url = items[0].get('image') if items else None
+                # Get unique images, max 10
+                image_urls = []
+                for item in items:
+                    img = item.get('image')
+                    if img and img not in image_urls:
+                        image_urls.append(img)
+                image_urls = image_urls[:10]
                 
                 try:
-                    if image_url:
+                    if len(image_urls) > 1:
+                        media = []
+                        for i, img in enumerate(image_urls):
+                            media_item = {"type": "photo", "media": img}
+                            if i == 0:
+                                media_item["caption"] = text
+                                media_item["parse_mode"] = "HTML"
+                            media.append(media_item)
+                            
+                        requests.post(
+                            f"https://api.telegram.org/bot{token}/sendMediaGroup",
+                            json={"chat_id": chat_id, "media": media},
+                            timeout=15
+                        )
+                    elif len(image_urls) == 1:
                         requests.post(
                             f"https://api.telegram.org/bot{token}/sendPhoto",
-                            json={"chat_id": chat_id, "photo": image_url, "caption": text, "parse_mode": "HTML"},
+                            json={"chat_id": chat_id, "photo": image_urls[0], "caption": text, "parse_mode": "HTML"},
                             timeout=10
                         )
                     else:
