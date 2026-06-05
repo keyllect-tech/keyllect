@@ -11,7 +11,32 @@ import { Button } from '@/components/ui/button'
 export function PopularProductsSection() {
   const { locale, products: storeProducts } = useStore()
   const t = getTranslation(locale)
-  const products = storeProducts.filter(p => p.isBestseller).slice(0, 4)
+  const getPopularProducts = () => {
+    const popular = []
+    const addedCategories = new Set()
+    
+    // Try to get 1 from each category
+    for (const p of storeProducts) {
+      if (!addedCategories.has(p.category)) {
+        popular.push(p)
+        addedCategories.add(p.category)
+      }
+      if (popular.length >= 4) break
+    }
+    
+    // Fill the rest if we have less than 4 categories
+    if (popular.length < 4) {
+      for (const p of storeProducts) {
+        if (!popular.find(prod => prod.id === p.id)) {
+          popular.push(p)
+        }
+        if (popular.length >= 4) break
+      }
+    }
+    return popular
+  }
+  
+  const products = getPopularProducts()
 
   return (
     <section id="popular" className="py-24 bg-card/30">
