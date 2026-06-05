@@ -93,7 +93,7 @@ export default function ProductPage({ params }: ProductPageProps) {
     : 0;
 
   const handleAddToCart = () => {
-    addToCart(product, quantity, selectedColor)
+    addToCart(product, quantity, selectedColor, product.images[selectedImage])
   }
 
   const handleSubmitReview = async (e: React.FormEvent) => {

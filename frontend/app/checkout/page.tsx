@@ -66,7 +66,7 @@ export default function CheckoutPage() {
             name: item.product.name[locale],
             quantity: item.quantity,
             price: item.product.price,
-            image: item.product.images?.[0] || '',
+            image: item.selectedImage || item.product.images?.[0] || '',
             selectedColor: item.selectedColor || ''
           }))
         })
@@ -89,7 +89,8 @@ export default function CheckoutPage() {
               name: item.product.name[locale],
               quantity: item.quantity,
               price: item.product.price,
-              image: item.product.images?.[0] || ''
+              image: item.selectedImage || item.product.images?.[0] || '',
+              selectedColor: item.selectedColor || ''
             }))
           })
         })
@@ -433,7 +434,7 @@ export default function CheckoutPage() {
                     <div key={item.id} className="flex gap-3">
                       <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-secondary flex-shrink-0">
                         <Image
-                          src={item.product.images[0]}
+                          src={item.selectedImage || item.product.images[0]}
                           alt={item.product.name[locale]}
                           fill
                           className="object-cover"

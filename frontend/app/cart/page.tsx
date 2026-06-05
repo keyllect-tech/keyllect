@@ -75,7 +75,7 @@ export default function CartPage() {
                       <Link href={`/product/${item.product.id}`} className="flex-shrink-0">
                         <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-secondary">
                           <Image
-                            src={item.product.images[0]}
+                            src={item.selectedImage || item.product.images[0]}
                             alt={item.product.name[locale]}
                             fill
                             className="object-cover"

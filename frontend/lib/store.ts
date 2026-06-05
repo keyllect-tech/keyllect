@@ -8,6 +8,7 @@ export interface CartItem {
   product: Product
   quantity: number
   selectedColor?: string
+  selectedImage?: string
 }
 
 interface User {
@@ -27,7 +28,7 @@ interface StoreState {
   
   // Cart
   cart: CartItem[]
-  addToCart: (product: Product, quantity?: number, selectedColor?: string) => void
+  addToCart: (product: Product, quantity?: number, selectedColor?: string, selectedImage?: string) => void
   removeFromCart: (itemId: string) => void
   updateQuantity: (itemId: string, quantity: number) => void
   clearCart: () => void
@@ -75,7 +76,7 @@ export const useStore = create<StoreState>()((set, get) => ({
   
   // Cart
   cart: [],
-  addToCart: (product, quantity = 1, selectedColor) => {
+  addToCart: (product, quantity = 1, selectedColor, selectedImage) => {
     const cart = get().cart
     const itemId = selectedColor ? `${product.id}-${selectedColor}` : product.id;
     const existingItem = cart.find((item) => item.id === itemId)
@@ -84,12 +85,12 @@ export const useStore = create<StoreState>()((set, get) => ({
       set({
         cart: cart.map((item) =>
           item.id === itemId
-            ? { ...item, quantity: item.quantity + quantity }
+            ? { ...item, quantity: item.quantity + quantity, selectedImage: selectedImage || item.selectedImage }
             : item
         ),
       })
     } else {
-      set({ cart: [...cart, { id: itemId, product, quantity, selectedColor }] })
+      set({ cart: [...cart, { id: itemId, product, quantity, selectedColor, selectedImage }] })
     }
   },
   removeFromCart: (itemId) => {
