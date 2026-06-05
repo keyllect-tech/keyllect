@@ -58,12 +58,13 @@ export interface Brand {
 export const categories: Category[] = []
 
 export const brands: Brand[] = [
-  { id: '1', name: 'Logitech', logo: '/brands/logitech.svg' },
-  { id: '2', name: 'Razer', logo: '/brands/razer.svg' },
-  { id: '3', name: 'SteelSeries', logo: '/brands/steelseries.svg' },
-  { id: '4', name: 'HyperX', logo: '/brands/hyperx.svg' },
-  { id: '5', name: 'ASUS ROG', logo: '/brands/asus-rog.svg' },
-  { id: '6', name: 'Corsair', logo: '/brands/corsair.svg' },
+  { id: '1', name: 'Cyberlynx' },
+  { id: '2', name: 'Zifriend' },
+  { id: '3', name: 'ATK' },
+  { id: '4', name: 'GravaStar' },
+  { id: '5', name: 'ZOWIE' },
+  { id: '6', name: 'Xinmeng' },
+  { id: '7', name: 'Ajazz' },
 ]
 
 export const products: Product[] = []

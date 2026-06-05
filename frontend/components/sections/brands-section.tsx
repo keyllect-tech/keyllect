@@ -26,24 +26,35 @@ export function BrandsSection() {
         </motion.div>
 
         {/* Brands Marquee */}
-        <div className="relative overflow-hidden">
-          <div className="flex items-center justify-center flex-wrap gap-8 lg:gap-16">
-            {brands.map((brand, index) => (
-              <motion.div
-                key={brand.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group"
-              >
-                <div className="w-32 h-20 rounded-xl bg-secondary/50 border border-border flex items-center justify-center p-4 transition-all duration-300 group-hover:border-primary/30 group-hover:bg-secondary">
-                  <span className="text-lg font-bold text-muted-foreground group-hover:text-foreground transition-colors">
+        <div className="relative overflow-hidden w-full max-w-full mt-10">
+          <style dangerouslySetInnerHTML={{__html: `
+            @keyframes marquee {
+              0% { transform: translateX(0%); }
+              100% { transform: translateX(-50%); }
+            }
+            .animate-marquee {
+              animation: marquee 20s linear infinite;
+            }
+          `}} />
+          <div className="flex w-[200%] md:w-[150%] lg:w-[120%] animate-marquee hover:[animation-play-state:paused] items-center">
+            <div className="flex w-1/2 items-center justify-around">
+              {brands.map((brand) => (
+                <div key={brand.id} className="w-40 h-20 mx-4 rounded-xl bg-secondary/50 border border-border flex items-center justify-center p-4 transition-all duration-300 hover:border-primary/50 hover:bg-secondary hover:shadow-[0_0_15px_rgba(var(--primary),0.2)]">
+                  <span className="text-xl font-bold text-muted-foreground hover:text-foreground transition-colors">
                     {brand.name}
                   </span>
                 </div>
-              </motion.div>
-            ))}
+              ))}
+            </div>
+            <div className="flex w-1/2 items-center justify-around">
+              {brands.map((brand) => (
+                <div key={brand.id + '-copy'} className="w-40 h-20 mx-4 rounded-xl bg-secondary/50 border border-border flex items-center justify-center p-4 transition-all duration-300 hover:border-primary/50 hover:bg-secondary hover:shadow-[0_0_15px_rgba(var(--primary),0.2)]">
+                  <span className="text-xl font-bold text-muted-foreground hover:text-foreground transition-colors">
+                    {brand.name}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
