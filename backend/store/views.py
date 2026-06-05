@@ -149,12 +149,12 @@ class CheckoutAPIView(APIView):
             items = data.get('items', [])
             
             items_list = []
-            for item in items:
+            for i, item in enumerate(items, start=1):
                 name = item.get('name', 'Товар')
                 color = item.get('selectedColor')
                 qty = item.get('quantity', 1)
                 color_text = f" ({color})" if color else ""
-                items_list.append(f"• {name}{color_text} × {qty}")
+                items_list.append(f"{i}. {name}{color_text} × {qty}")
             
             items_text = "\n".join(items_list)
             
