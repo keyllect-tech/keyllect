@@ -8,6 +8,7 @@ import { useStore } from '@/lib/store'
 import { getTranslation, formatPrice } from '@/lib/i18n'
 import type { Product } from '@/lib/data'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 interface ProductCardProps {
   product: Product
@@ -122,6 +123,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               onClick={(e) => {
                 e.preventDefault()
                 addToCart(product)
+                toast.success(locale === 'ru' ? 'Товар добавлен в корзину' : "Mahsulot savatchaga qo'shildi")
               }}
               className="h-10 w-10 rounded-xl bg-primary hover:bg-primary/90"
             >

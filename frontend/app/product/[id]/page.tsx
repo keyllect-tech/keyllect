@@ -16,6 +16,7 @@ import {
   RotateCcw,
   CheckCircle
 } from 'lucide-react'
+import { toast } from 'sonner'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { ProductCard } from '@/components/product-card'
@@ -94,6 +95,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
   const handleAddToCart = () => {
     addToCart(product, quantity, selectedColor, product.images[selectedImage])
+    toast.success(locale === 'ru' ? 'Товар добавлен в корзину' : "Mahsulot savatchaga qo'shildi")
   }
 
   const handleSubmitReview = async (e: React.FormEvent) => {
