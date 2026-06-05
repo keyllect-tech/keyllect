@@ -181,10 +181,12 @@ export const useStore = create<StoreState>()((set, get) => ({
           inStock: p.in_stock,
           isBestseller: false,
           isNew: true,
-          specifications: p.characteristics ? Object.entries(p.characteristics).map(([key, value]) => {
-            const uzValue = p.characteristics_uz ? p.characteristics_uz[key] : undefined;
+          specifications: p.characteristics ? Object.entries(p.characteristics).map(([key, value], index) => {
+            const uzEntries = p.characteristics_uz ? Object.entries(p.characteristics_uz) : [];
+            const uzKey = uzEntries[index] ? uzEntries[index][0] : key;
+            const uzValue = uzEntries[index] ? uzEntries[index][1] : undefined;
             return {
-              key: { ru: key, uz: key }, 
+              key: { ru: key, uz: uzKey }, 
               value: { ru: String(value), uz: uzValue ? String(uzValue) : String(value) }
             };
           }) : [],
