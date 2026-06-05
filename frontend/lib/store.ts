@@ -184,7 +184,7 @@ export const useStore = create<StoreState>()((set, get) => ({
           specifications: p.characteristics ? Object.entries(p.characteristics).map(([key, value]) => {
             const uzValue = p.characteristics_uz ? p.characteristics_uz[key] : undefined;
             return {
-              label: { ru: key, uz: key }, // Key stays same or we can assume it's just the label
+              key: { ru: key, uz: key }, 
               value: { ru: String(value), uz: uzValue ? String(uzValue) : String(value) }
             };
           }) : [],
