@@ -13,11 +13,21 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'brand', 'price', 'in_stock', 'created_at')
-    list_filter = ('category', 'brand', 'in_stock')
+    list_display = ('name', 'category', 'brand', 'price', 'stock', 'in_stock', 'is_active', 'created_at')
+    list_filter = ('category', 'brand', 'in_stock', 'is_active')
     search_fields = ('name', 'brand')
     prepopulated_fields = {'slug': ('name',)}
+    list_editable = ('in_stock', 'is_active', 'price', 'stock')
     inlines = [ProductImageInline]
+    actions = ['make_active', 'make_inactive']
+
+    @admin.action(description="Активировать выбранные товары (показывать на сайте)")
+    def make_active(self, request, queryset):
+        queryset.update(is_active=True)
+
+    @admin.action(description="Деактивировать выбранные товары (скрыть с сайта)")
+    def make_inactive(self, request, queryset):
+        queryset.update(is_active=False)
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem

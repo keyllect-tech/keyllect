@@ -26,7 +26,7 @@ export function BrandsSection() {
         </motion.div>
 
         {/* Brands Marquee */}
-        <div className="relative overflow-hidden w-full max-w-full mt-10">
+        <div className="relative overflow-hidden w-full mt-10 group flex">
           <style dangerouslySetInnerHTML={{__html: `
             @keyframes marquee {
               0% { transform: translateX(0%); }
@@ -36,19 +36,19 @@ export function BrandsSection() {
               animation: marquee 20s linear infinite;
             }
           `}} />
-          <div className="flex w-[200%] md:w-[150%] lg:w-[120%] animate-marquee hover:[animation-play-state:paused] items-center">
-            <div className="flex w-1/2 items-center justify-around">
+          <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
+            <div className="flex min-w-max items-center">
               {brands.map((brand) => (
-                <div key={brand.id} className="w-40 h-20 mx-4 rounded-xl bg-secondary/50 border border-border flex items-center justify-center p-4 transition-all duration-300 hover:border-primary/50 hover:bg-secondary hover:shadow-[0_0_15px_rgba(var(--primary),0.2)]">
+                <div key={brand.id} className="w-40 h-20 mx-4 shrink-0 rounded-xl bg-secondary/50 border border-border flex items-center justify-center p-4 transition-all duration-300 hover:border-primary/50 hover:bg-secondary hover:shadow-[0_0_15px_rgba(245,233,141,0.2)]">
                   <span className="text-xl font-bold text-muted-foreground hover:text-foreground transition-colors">
                     {brand.name}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="flex w-1/2 items-center justify-around">
+            <div className="flex min-w-max items-center">
               {brands.map((brand) => (
-                <div key={brand.id + '-copy'} className="w-40 h-20 mx-4 rounded-xl bg-secondary/50 border border-border flex items-center justify-center p-4 transition-all duration-300 hover:border-primary/50 hover:bg-secondary hover:shadow-[0_0_15px_rgba(var(--primary),0.2)]">
+                <div key={brand.id + '-copy'} className="w-40 h-20 mx-4 shrink-0 rounded-xl bg-secondary/50 border border-border flex items-center justify-center p-4 transition-all duration-300 hover:border-primary/50 hover:bg-secondary hover:shadow-[0_0_15px_rgba(245,233,141,0.2)]">
                   <span className="text-xl font-bold text-muted-foreground hover:text-foreground transition-colors">
                     {brand.name}
                   </span>

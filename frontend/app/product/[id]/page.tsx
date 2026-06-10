@@ -268,9 +268,11 @@ export default function ProductPage({ params }: ProductPageProps) {
 
               {/* Stock Status */}
               <div className="flex items-center gap-2">
-                <div className={`w-3 h-3 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`} />
-                <span className={product.inStock ? 'text-green-500' : 'text-red-500'}>
-                  {product.inStock ? t.products.inStock : t.products.outOfStock}
+                <div className={`w-3 h-3 rounded-full ${product.inStock && product.stock > 0 ? 'bg-green-500' : 'bg-red-500'}`} />
+                <span className={product.inStock && product.stock > 0 ? 'text-green-500' : 'text-red-500'}>
+                  {product.inStock && product.stock > 0 
+                    ? `${t.products.inStock} (${product.stock} ${locale === 'ru' ? 'шт.' : 'dona'})` 
+                    : t.products.outOfStock}
                 </span>
               </div>
 
@@ -308,7 +310,8 @@ export default function ProductPage({ params }: ProductPageProps) {
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => setQuantity(quantity + 1)}
+                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                    disabled={quantity >= product.stock || !product.inStock}
                     className="h-10 w-10 rounded-lg border-border"
                   >
                     <Plus className="w-4 h-4" />

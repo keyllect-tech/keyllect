@@ -179,6 +179,7 @@ export const useStore = create<StoreState>()((set, get) => ({
           brand: p.brand,
           rating: Number(p.rating || 0),
           reviewsCount: 0,
+          stock: p.stock ?? 0,
           inStock: p.in_stock,
           isBestseller: false,
           isNew: true,

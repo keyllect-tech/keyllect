@@ -125,6 +125,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                 addToCart(product)
                 toast.success(locale === 'ru' ? 'Товар добавлен в корзину' : "Mahsulot savatchaga qo'shildi")
               }}
+              disabled={!product.inStock || product.stock <= 0}
               className="h-10 w-10 rounded-xl bg-primary hover:bg-primary/90"
             >
               <ShoppingCart className="w-4 h-4" />

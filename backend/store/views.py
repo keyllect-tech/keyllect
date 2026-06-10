@@ -15,7 +15,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(is_active=True)
     serializer_class = ProductSerializer
     permission_classes = [IsAdminOrReadOnly]
     lookup_field = 'slug'
@@ -153,6 +153,24 @@ class CheckoutAPIView(APIView):
                 name = item.get('name', 'Товар')
                 color = item.get('selectedColor')
                 qty = item.get('quantity', 1)
+                
+                try:
+                    product_id = item.get('product_id')
+                    if product_id:
+                        from .models import Product
+                        product = Product.objects.get(id=product_id)
+                        if product.stock >= qty:
+                            product.stock -= qty
+                        else:
+                            product.stock = 0
+                        
+                        if product.stock == 0:
+                            product.in_stock = False
+                            
+                        product.save()
+                except Exception as e:
+                    print(f"Failed to reduce stock: {e}")
+                
                 color_text = f" ({color})" if color else ""
                 items_list.append(f"{i}. {name}{color_text} × {qty}")
             

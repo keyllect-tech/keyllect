@@ -15,6 +15,7 @@ export interface Product {
   brand: string
   rating: number
   reviewsCount: number
+  stock: number
   inStock: boolean
   isNew?: boolean
   isBestseller?: boolean
@@ -76,8 +77,8 @@ export const reviews: Review[] = [
     rating: 5,
     date: '2024-01-15',
     text: {
-      ru: 'Отличный магазин! Заказал мышку Logitech, доставили за 2 дня. Всё оригинальное, с гарантией.',
-      uz: 'A\'lo do\'kon! Logitech sichqonchasini buyurtma qildim, 2 kun ichida yetkazib berdi. Hammasi original, kafolatli.',
+      ru: 'Отличный магазин! Заказал мышку ATK, доставили за 2 дня. Качество сборки на высоте, сенсор отличный.',
+      uz: 'A\'lo do\'kon! ATK sichqonchasini buyurtma qildim, 2 kun ichida yetkazib berishdi. Yig\'ish sifati yuqori darajada, sensori ajoyib.',
     },
   },
   {
@@ -86,18 +87,18 @@ export const reviews: Review[] = [
     rating: 5,
     date: '2024-01-10',
     text: {
-      ru: 'Покупала клавиатуру в подарок мужу. Консультант помог выбрать идеальную модель. Очень довольна!',
-      uz: 'Erimga sovg\'a uchun klaviatura sotib oldim. Maslahatchi ideal modelni tanlashga yordam berdi. Juda mamnunman!',
+      ru: 'Покупала механическую клавиатуру Xinmeng в подарок мужу. Консультант помог выбрать идеальную модель. Очень довольна!',
+      uz: 'Erimga sovg\'a uchun Xinmeng mexanik klaviaturasini sotib oldim. Maslahatchi ideal modelni tanlashga yordam berdi. Juda mamnunman!',
     },
   },
   {
     id: '3',
     author: 'Дмитрий В.',
-    rating: 4,
+    rating: 5,
     date: '2024-01-05',
     text: {
-      ru: 'Хороший ассортимент и адекватные цены. Единственное — хотелось бы больше моделей наушников.',
-      uz: 'Yaxshi assortiment va mos narxlar. Yagona narsa — ko\'proq quloqlik modellari bo\'lsa yaxshi bo\'lardi.',
+      ru: 'Хороший ассортимент кастомных девайсов и адекватные цены. Брал мышь от Cyberlynx — просто пушка, глайды отличные.',
+      uz: 'Kastom qurilmalarning yaxshi assortimenti va mos narxlar. Cyberlynx sichqonchasini oldim — shunchaki ajoyib, glaydlari zo\'r.',
     },
   },
 ]
