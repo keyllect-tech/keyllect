@@ -172,12 +172,12 @@ export default function ProductPage({ params }: ProductPageProps) {
               className="space-y-4"
             >
               {/* Main Image */}
-              <div className="relative aspect-square rounded-2xl overflow-hidden bg-card border border-border">
+              <div className="relative aspect-[4/3] lg:aspect-square rounded-2xl overflow-hidden bg-card border border-border">
                 <Image
                   src={product.images[selectedImage]}
                   alt={product.name[locale]}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   priority
                 />
                 
@@ -198,7 +198,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
               {/* Thumbnails */}
               {product.images.length > 1 && (
-                <div className="flex gap-3">
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
                   {product.images.map((image, index) => (
                     <button
                       key={index}
