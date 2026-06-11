@@ -8,6 +8,7 @@ import { PopularProductsSection } from '@/components/sections/popular-products-s
 import { BrandsSection } from '@/components/sections/brands-section'
 import { WhyUsSection } from '@/components/sections/why-us-section'
 import { ReviewsSection } from '@/components/sections/reviews-section'
+import { DriversSection } from '@/components/sections/drivers-section'
 
 export default function HomePage() {
   return (
@@ -19,6 +20,7 @@ export default function HomePage() {
         <BrandsSection />
         <PopularProductsSection />
         <WhyUsSection />
+        <DriversSection />
         <ReviewsSection />
       </main>
       <Footer />
