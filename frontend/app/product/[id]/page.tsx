@@ -172,7 +172,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               className="space-y-4"
             >
               {/* Main Image */}
-              <div className="relative aspect-[4/3] lg:aspect-square rounded-2xl overflow-hidden bg-card border border-border">
+              <div className="relative aspect-video lg:aspect-square rounded-2xl overflow-hidden bg-card border border-border">
                 <Image
                   src={product.images[selectedImage]}
                   alt={product.name[locale]}
