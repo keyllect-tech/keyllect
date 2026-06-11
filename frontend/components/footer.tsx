@@ -27,6 +27,7 @@ export function Footer() {
     { href: '/delivery', label: t.footer.delivery },
     { href: '/returns', label: t.footer.returns },
     { href: '/faq', label: t.footer.faq },
+    { href: '/drivers', label: locale === 'ru' ? 'Драйверы и ПО' : 'Drayverlar va Dasturlar' },
   ]
 
   return (
