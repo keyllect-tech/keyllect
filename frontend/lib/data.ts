@@ -63,7 +63,6 @@ export const brands: Brand[] = [
   { id: '2', name: 'Zifriend' },
   { id: '3', name: 'ATK' },
   { id: '4', name: 'GravaStar' },
-  { id: '5', name: 'ZOWIE' },
   { id: '6', name: 'Xinmeng' },
   { id: '7', name: 'Ajazz' },
 ]
@@ -75,7 +74,7 @@ export const reviews: Review[] = [
     id: '1',
     author: 'Алексей К.',
     rating: 5,
-    date: '2024-01-15',
+    date: '2026-06-10',
     text: {
       ru: 'Отличный магазин! Заказал мышку ATK, доставили за 2 дня. Качество сборки на высоте, сенсор отличный.',
       uz: 'A\'lo do\'kon! ATK sichqonchasini buyurtma qildim, 2 kun ichida yetkazib berishdi. Yig\'ish sifati yuqori darajada, sensori ajoyib.',
@@ -85,7 +84,7 @@ export const reviews: Review[] = [
     id: '2',
     author: 'Мария С.',
     rating: 5,
-    date: '2024-01-10',
+    date: '2026-05-25',
     text: {
       ru: 'Покупала механическую клавиатуру Xinmeng в подарок мужу. Консультант помог выбрать идеальную модель. Очень довольна!',
       uz: 'Erimga sovg\'a uchun Xinmeng mexanik klaviaturasini sotib oldim. Maslahatchi ideal modelni tanlashga yordam berdi. Juda mamnunman!',
@@ -95,7 +94,7 @@ export const reviews: Review[] = [
     id: '3',
     author: 'Дмитрий В.',
     rating: 5,
-    date: '2024-01-05',
+    date: '2026-04-12',
     text: {
       ru: 'Хороший ассортимент кастомных девайсов и адекватные цены. Брал мышь от Cyberlynx — просто пушка, глайды отличные.',
       uz: 'Kastom qurilmalarning yaxshi assortimenti va mos narxlar. Cyberlynx sichqonchasini oldim — shunchaki ajoyib, glaydlari zo\'r.',
