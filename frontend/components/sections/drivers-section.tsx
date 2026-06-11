@@ -18,7 +18,7 @@ export function DriversSection() {
         driversPreview.push({
           name: driver.name,
           url: driver.url,
-          productName: product.name,
+          productName: typeof product.name === 'object' ? (product.name as any)[locale] || (product.name as any)['ru'] : product.name,
           productId: product.id
         })
         if (driversPreview.length >= 6) break
@@ -74,7 +74,7 @@ export function DriversSection() {
                   {driver.name}
                 </span>
                 <span className="text-sm text-muted-foreground mt-1 truncate">
-                  {driver.productName}
+                  {driver.productName as string}
                 </span>
               </div>
               <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center group-hover:bg-primary/20 transition-colors flex-shrink-0 ml-4">

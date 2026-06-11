@@ -20,10 +20,11 @@ export default function DriversPage() {
   const productsWithDrivers = products.filter(p => p.drivers && p.drivers.length > 0)
 
   // Filter by search
-  const filtered = productsWithDrivers.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
+  const filtered = productsWithDrivers.filter(p => {
+    const pName = typeof p.name === 'object' ? (p.name as any)[locale] || (p.name as any)['ru'] : p.name;
+    return pName.toLowerCase().includes(search.toLowerCase()) ||
     p.drivers!.some(d => d.name.toLowerCase().includes(search.toLowerCase()))
-  )
+  })
 
   return (
     <>
@@ -96,7 +97,7 @@ export default function DriversPage() {
                       href={`/product/${product.id}`}
                       className="text-xl font-bold text-foreground hover:text-primary transition-colors"
                     >
-                      {product.name}
+                      {typeof product.name === 'object' ? (product.name as any)[locale] || (product.name as any)['ru'] : product.name}
                     </Link>
                     <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
                       {product.drivers!.length} {locale === 'ru' ? 'файл' : 'fayl'}
