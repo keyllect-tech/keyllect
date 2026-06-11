@@ -11,7 +11,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductImage
-        fields = ['id', 'image']
+        fields = ['id', 'image', 'color']
 
     def get_image(self, obj):
         return obj.image.url if obj.image else None

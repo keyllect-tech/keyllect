@@ -44,6 +44,7 @@ class Product(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='products/', verbose_name="Изображение")
+    color = models.CharField(max_length=100, blank=True, null=True, verbose_name="Цвет (для фильтра)", help_text="Укажите цвет, если это фото конкретного цвета товара. Например: black, orange")
 
     class Meta:
         verbose_name = "Изображение товара"
