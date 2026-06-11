@@ -196,7 +196,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               )}
 
               {/* Main Image */}
-              <div className="relative flex-1 aspect-square rounded-2xl overflow-hidden bg-white/5 border border-border">
+              <div className="relative flex-1 min-w-0 h-80 sm:h-96 lg:h-[500px] rounded-2xl overflow-hidden bg-white/5 border border-border">
                 <Image
                   src={product.images[selectedImage]}
                   alt={product.name[locale]}
