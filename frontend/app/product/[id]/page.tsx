@@ -281,10 +281,16 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <div className="flex flex-col gap-2">
                   <span className="text-sm text-muted-foreground">{locale === 'ru' ? 'Выбор цвета:' : 'Rang tanlash:'}</span>
                   <div className="flex flex-wrap gap-2">
-                    {product.colors.map(color => (
+                    {product.colors.map((color, colorIndex) => (
                       <button
                         key={color}
-                        onClick={() => setSelectedColor(color)}
+                        onClick={() => {
+                          setSelectedColor(color)
+                          // Switch to image at the same index as the color (if it exists)
+                          if (colorIndex < product.images.length) {
+                            setSelectedImage(colorIndex)
+                          }
+                        }}
                         className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${selectedColor === color ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:border-primary/50 text-foreground'}`}
                       >
                         {color}
