@@ -21,10 +21,10 @@ export function DriversSection() {
           productName: typeof product.name === 'object' ? (product.name as any)[locale] || (product.name as any)['ru'] : product.name,
           productId: product.id
         })
-        if (driversPreview.length >= 6) break
+        if (driversPreview.length >= 3) break
       }
     }
-    if (driversPreview.length >= 6) break
+    if (driversPreview.length >= 3) break
   }
 
   if (driversPreview.length === 0) return null
