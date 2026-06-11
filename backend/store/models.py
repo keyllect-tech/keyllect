@@ -53,6 +53,18 @@ class ProductImage(models.Model):
     def __str__(self):
         return f"Image for {self.product.name}"
 
+class ProductDriver(models.Model):
+    product = models.ForeignKey(Product, related_name='drivers', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, verbose_name="Название ПО / Драйвера")
+    url = models.URLField(max_length=500, verbose_name="Ссылка на скачивание")
+    
+    class Meta:
+        verbose_name = "Драйвер / ПО"
+        verbose_name_plural = "Драйверы и ПО"
+
+    def __str__(self):
+        return f"{self.name} ({self.product.name})"
+
 class Order(models.Model):
     STATUS_CHOICES = (
         ('NEW', 'Новый'),

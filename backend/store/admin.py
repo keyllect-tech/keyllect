@@ -1,9 +1,19 @@
 from django.contrib import admin
-from .models import Category, Product, ProductImage, Order, OrderItem, Customer
+from .models import Category, Product, ProductImage, ProductDriver, Order, OrderItem, Customer
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
+
+class ProductDriverInline(admin.TabularInline):
+    model = ProductDriver
+    extra = 0
+
+@admin.register(ProductDriver)
+class ProductDriverAdmin(admin.ModelAdmin):
+    list_display = ('name', 'product', 'url')
+    search_fields = ('name', 'product__name')
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -18,7 +28,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name', 'brand')
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ('in_stock', 'is_active', 'price', 'stock')
-    inlines = [ProductImageInline]
+    inlines = [ProductImageInline, ProductDriverInline]
     actions = ['make_active', 'make_inactive']
 
     @admin.action(description="Активировать выбранные товары (показывать на сайте)")

@@ -20,6 +20,7 @@ export interface Product {
   isNew?: boolean
   isBestseller?: boolean
   colors?: string[]
+  drivers?: { name: string; url: string }[]
   specifications: {
     key: { ru: string; uz: string }
     value: { ru: string; uz: string }

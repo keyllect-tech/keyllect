@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Product, ProductImage, Order, OrderItem
+from .models import Category, Product, ProductImage, ProductDriver, Order, OrderItem
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,8 +16,14 @@ class ProductImageSerializer(serializers.ModelSerializer):
     def get_image(self, obj):
         return obj.image.url if obj.image else None
 
+class ProductDriverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductDriver
+        fields = ['id', 'name', 'url']
+
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
+    drivers = ProductDriverSerializer(many=True, read_only=True)
     category_details = CategorySerializer(source='category', read_only=True)
     category_slug = serializers.SlugRelatedField(
         source='category', slug_field='slug', read_only=True

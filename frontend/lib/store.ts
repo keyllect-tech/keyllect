@@ -192,7 +192,8 @@ export const useStore = create<StoreState>()((set, get) => ({
               value: { ru: String(value), uz: uzValue ? String(uzValue) : String(value) }
             };
           }) : [],
-          colors: p.colors ? p.colors.split(',').map((c: string) => c.trim()) : []
+          colors: p.colors ? p.colors.split(',').map((c: string) => c.trim()) : [],
+          drivers: p.drivers?.map((d: any) => ({ name: d.name, url: d.url })) || []
         }
       })
 

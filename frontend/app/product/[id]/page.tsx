@@ -14,7 +14,8 @@ import {
   Truck,
   Shield,
   RotateCcw,
-  CheckCircle
+  CheckCircle,
+  Download
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Header } from '@/components/header'
@@ -556,6 +557,42 @@ export default function ProductPage({ params }: ProductPageProps) {
               </div>
             )}
           </motion.div>
+
+          {/* Drivers Section */}
+          {product.drivers && product.drivers.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-16"
+            >
+              <h2 className="text-2xl font-bold text-foreground mb-8 text-center">
+                {locale === 'ru' ? 'Драйверы и ПО' : 'Drayverlar va Dasturlar'}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {product.drivers.map((driver, idx) => (
+                  <a
+                    key={idx}
+                    href={driver.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-6 rounded-2xl bg-secondary/50 border border-border hover:border-primary/50 transition-colors group"
+                  >
+                    <div className="flex flex-col">
+                      <span className="font-bold text-foreground group-hover:text-primary transition-colors">
+                        {driver.name}
+                      </span>
+                      <span className="text-sm text-muted-foreground mt-1">
+                        {locale === 'ru' ? 'Скачать с офиц. сайта' : 'Rasmiy saytdan yuklab olish'}
+                      </span>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                      <Download className="w-5 h-5 text-primary" />
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          )}
 
           {/* Related Products */}
           {relatedProducts.length > 0 && (
