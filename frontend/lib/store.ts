@@ -71,8 +71,11 @@ export const useStore = create<StoreState>()((set, get) => ({
   },
 
   // Locale
-  locale: 'ru',
-  setLocale: (locale) => set({ locale }),
+  locale: (typeof window !== 'undefined' ? localStorage.getItem('keyllect_locale') as Locale : null) || 'ru',
+  setLocale: (locale) => {
+    if (typeof window !== 'undefined') localStorage.setItem('keyllect_locale', locale)
+    set({ locale })
+  },
   
   // Cart
   cart: [],
