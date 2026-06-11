@@ -169,41 +169,16 @@ export default function ProductPage({ params }: ProductPageProps) {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="space-y-4"
+              className="flex gap-4"
             >
-              {/* Main Image */}
-              <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-white/5 border border-border">
-                <Image
-                  src={product.images[selectedImage]}
-                  alt={product.name[locale]}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                
-                {/* Badges */}
-                <div className="absolute top-4 left-4 flex flex-col gap-2">
-                  {product.isNew && (
-                    <span className="px-3 py-1.5 text-xs font-semibold bg-primary text-primary-foreground rounded-md">
-                      NEW
-                    </span>
-                  )}
-                  {product.originalPrice && (
-                    <span className="px-3 py-1.5 text-xs font-semibold bg-red-500 text-white rounded-md">
-                      -{Math.round((1 - product.price / product.originalPrice) * 100)}%
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Thumbnails */}
+              {/* Thumbnails (Vertical on left) */}
               {product.images.length > 1 && (
-                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
+                <div className="flex flex-col gap-3 overflow-y-auto pr-1 scrollbar-none h-auto max-h-[calc(100vw-2rem)] lg:max-h-[500px]">
                   {product.images.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
-                      className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
+                      className={`relative w-16 h-16 shrink-0 rounded-xl overflow-hidden border-2 transition-all ${
                         selectedImage === index
                           ? 'border-primary'
                           : 'border-border hover:border-primary/50'
@@ -219,6 +194,31 @@ export default function ProductPage({ params }: ProductPageProps) {
                   ))}
                 </div>
               )}
+
+              {/* Main Image */}
+              <div className="relative flex-1 aspect-square rounded-2xl overflow-hidden bg-white/5 border border-border">
+                <Image
+                  src={product.images[selectedImage]}
+                  alt={product.name[locale]}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                
+                {/* Badges */}
+                <div className="absolute top-4 right-4 flex flex-col gap-2">
+                  {product.isNew && (
+                    <span className="px-3 py-1.5 text-xs font-semibold bg-primary text-primary-foreground rounded-md">
+                      NEW
+                    </span>
+                  )}
+                  {product.originalPrice && (
+                    <span className="px-3 py-1.5 text-xs font-semibold bg-red-500 text-white rounded-md">
+                      -{Math.round((1 - product.price / product.originalPrice) * 100)}%
+                    </span>
+                  )}
+                </div>
+              </div>
             </motion.div>
 
             {/* Product Info */}
