@@ -54,7 +54,7 @@ class ProductImage(models.Model):
         return f"Image for {self.product.name}"
 
 class ProductDriver(models.Model):
-    product = models.ForeignKey(Product, related_name='drivers', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='drivers', on_delete=models.CASCADE, null=True, blank=True, help_text="Оставьте пустым, если это общее ПО для всех товаров")
     name = models.CharField(max_length=255, verbose_name="Название ПО / Драйвера")
     url = models.URLField(max_length=500, verbose_name="Ссылка на скачивание")
     
@@ -63,7 +63,7 @@ class ProductDriver(models.Model):
         verbose_name_plural = "Драйверы и ПО"
 
     def __str__(self):
-        return f"{self.name} ({self.product.name})"
+        return f"{self.name} (Все товары)" if not self.product else f"{self.name} ({self.product.name})"
 
 class Order(models.Model):
     STATUS_CHOICES = (
