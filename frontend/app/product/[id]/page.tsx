@@ -172,12 +172,12 @@ export default function ProductPage({ params }: ProductPageProps) {
               className="space-y-4"
             >
               {/* Main Image */}
-              <div className="relative h-[300px] md:h-[400px] lg:h-auto lg:aspect-square w-full rounded-2xl overflow-hidden bg-card border border-border">
+              <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-white/5 border border-border">
                 <Image
                   src={product.images[selectedImage]}
                   alt={product.name[locale]}
                   fill
-                  className="object-contain"
+                  className="object-cover"
                   priority
                 />
                 
