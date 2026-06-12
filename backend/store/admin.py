@@ -1,5 +1,31 @@
+from django import forms
 from django.contrib import admin
 from .models import Category, Product, ProductImage, ProductDriver, Order, OrderItem, Customer
+
+class MultipleFileInput(forms.FileInput):
+    allow_multiple_selected = True
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput(attrs={'multiple': True}))
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            return [single_file_clean(d, initial) for d in data]
+        return single_file_clean(data, initial)
+
+class ProductAdminForm(forms.ModelForm):
+    additional_images = MultipleFileField(
+        required=False,
+        label="Добавить несколько изображений",
+        help_text="Вы можете выбрать и загрузить сразу несколько картинок за раз. Они добавятся к списку ниже."
+    )
+
+    class Meta:
+        model = Product
+        fields = '__all__'
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -23,6 +49,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    form = ProductAdminForm
     list_display = ('name', 'category', 'brand', 'price', 'stock', 'in_stock', 'is_active', 'created_at')
     list_filter = ('category', 'brand', 'in_stock', 'is_active')
     search_fields = ('name', 'brand')
@@ -30,6 +57,12 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ('in_stock', 'is_active', 'price', 'stock')
     inlines = [ProductImageInline, ProductDriverInline]
     actions = ['make_active', 'make_inactive']
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        files = request.FILES.getlist('additional_images')
+        for f in files:
+            ProductImage.objects.create(product=obj, image=f)
 
     @admin.action(description="Активировать выбранные товары (показывать на сайте)")
     def make_active(self, request, queryset):
