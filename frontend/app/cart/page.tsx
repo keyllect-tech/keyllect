@@ -72,7 +72,7 @@ export default function CartPage() {
                       className="flex gap-4 p-4 rounded-2xl bg-card border border-border"
                     >
                       {/* Image */}
-                      <Link href={`/product/${item.product.id}`} className="flex-shrink-0">
+                      <Link href={`/product?id=${item.product.id}`} className="flex-shrink-0">
                         <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-secondary">
                           <Image
                             src={item.selectedImage || item.product.images[0]}
@@ -90,7 +90,7 @@ export default function CartPage() {
                             <p className="text-xs text-primary font-medium mb-1">
                               {item.product.brand}
                             </p>
-                            <Link href={`/product/${item.product.id}`}>
+                            <Link href={`/product?id=${item.product.id}`}>
                               <h3 className="font-semibold text-foreground line-clamp-2 hover:text-primary transition-colors">
                                 {item.product.name[locale]}
                               </h3>

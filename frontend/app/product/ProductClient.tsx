@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -29,11 +29,10 @@ import { Button } from '@/components/ui/button'
 import { notFound } from 'next/navigation'
 
 interface ProductPageProps {
-  params: Promise<{ id: string }>
+  id: string
 }
 
-export default function ProductClient({ params }: ProductPageProps) {
-  const { id } = use(params)
+export default function ProductClient({ id }: ProductPageProps) {
   const { locale, addToCart, toggleFavorite, isFavorite, products, isLoading } = useStore()
   
   const product = getProductById(products, id)

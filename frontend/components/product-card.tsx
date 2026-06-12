@@ -63,7 +63,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         </button>
 
         {/* Image */}
-        <Link href={`/product/${product.id}`} className="block">
+        <Link href={`/product?id=${product.id}`} className="block">
           <div className="relative aspect-square overflow-hidden bg-secondary/30">
             <Image
               src={product.images[0]}
@@ -81,7 +81,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           <p className="text-xs font-medium text-primary mb-1">{product.brand}</p>
 
           {/* Name */}
-          <Link href={`/product/${product.id}`}>
+          <Link href={`/product?id=${product.id}`}>
             <h3 className="font-semibold text-foreground line-clamp-2 mb-2 group-hover:text-primary transition-colors">
               {product.name[locale]}
             </h3>
