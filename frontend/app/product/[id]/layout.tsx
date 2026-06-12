@@ -1,5 +1,3 @@
-export const runtime = 'edge';
-
 import { Metadata } from 'next'
 import { getProductById } from '@/lib/data'
 import { apiUrl, mediaUrl } from '@/lib/api'

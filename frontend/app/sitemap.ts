@@ -1,4 +1,4 @@
-export const runtime = 'edge';
+export const dynamic = 'force-static';
 
 import { MetadataRoute } from 'next'
 import { categories, products } from '@/lib/data'

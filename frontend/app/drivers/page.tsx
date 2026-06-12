@@ -1,7 +1,5 @@
 'use client'
 
-export const runtime = 'edge'
-
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Download, Search, Package } from 'lucide-react'
