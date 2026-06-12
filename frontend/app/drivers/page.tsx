@@ -12,41 +12,18 @@ import { getTranslation } from '@/lib/i18n'
 import Link from 'next/link'
 
 export default function DriversPage() {
-  const { locale, products, globalDrivers, isLoading } = useStore()
+  const { locale, products, drivers, isLoading } = useStore()
   const t = getTranslation(locale)
   const [search, setSearch] = useState('')
 
-  // Collect all products that have drivers
-  const productsWithDrivers = [...products.filter(p => p.drivers && p.drivers.length > 0)]
-
-  // If there are global drivers, append them as a virtual product
-  if (globalDrivers && globalDrivers.length > 0) {
-    productsWithDrivers.push({
-      id: 'global',
-      name: {
-        ru: 'Общие драйверы и утилиты',
-        uz: 'Umumiy drayverlar va dasturlar'
-      },
-      description: { ru: '', uz: '' },
-      price: 0,
-      images: [],
-      category: 'drivers',
-      brand: 'Keyllect',
-      rating: 5,
-      reviewsCount: 0,
-      stock: 1,
-      inStock: true,
-      specifications: [],
-      colors: [],
-      drivers: globalDrivers
-    })
-  }
-
   // Filter by search
-  const filtered = productsWithDrivers.filter(p => {
-    const pName = typeof p.name === 'object' ? (p.name as any)[locale] || (p.name as any)['ru'] : p.name;
-    return pName.toLowerCase().includes(search.toLowerCase()) ||
-    p.drivers!.some(d => d.name.toLowerCase().includes(search.toLowerCase()))
+  const filtered = drivers.filter(d => {
+    const product = products.find(p => p.id === String(d.product))
+    const productName = product ? (typeof product.name === 'object' ? (product.name as any)[locale] || (product.name as any)['ru'] : product.name) : '';
+    const groupName = d.product === null ? (locale === 'ru' ? 'Общее ПО' : 'Umumiy dasturlar') : productName;
+    
+    return d.name.toLowerCase().includes(search.toLowerCase()) ||
+           groupName.toLowerCase().includes(search.toLowerCase())
   })
 
   return (
@@ -88,7 +65,7 @@ export default function DriversPage() {
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder={locale === 'ru' ? 'Поиск драйвера или товара...' : "Drayverni yoki mahsulotni qidiring..."}
+              placeholder={locale === 'ru' ? 'Поиск драйвера...' : "Drayverni qidiring..."}
               className="w-full pl-12 pr-4 py-3 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
             />
           </motion.div>
@@ -106,59 +83,38 @@ export default function DriversPage() {
               </p>
             </div>
           ) : (
-            <div className="space-y-10">
-              {filtered.map((product, pIdx) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: pIdx * 0.05 }}
-                >
-                  {/* Product name */}
-                  <div className="flex items-center gap-3 mb-4">
-                    {product.id === 'global' ? (
-                      <span className="text-xl font-bold text-foreground">
-                        {typeof product.name === 'object' ? (product.name as any)[locale] || (product.name as any)['ru'] : product.name}
-                      </span>
-                    ) : (
-                      <Link
-                        href={`/product/${product.id}`}
-                        className="text-xl font-bold text-foreground hover:text-primary transition-colors"
-                      >
-                        {typeof product.name === 'object' ? (product.name as any)[locale] || (product.name as any)['ru'] : product.name}
-                      </Link>
-                    )}
-                    <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                      {product.drivers!.length} {locale === 'ru' ? 'файл' : 'fayl'}
-                    </span>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {filtered.map((driver, dIdx) => {
+                const product = products.find(p => p.id === String(driver.product))
+                const productName = product 
+                  ? (typeof product.name === 'object' ? (product.name as any)[locale] || (product.name as any)['ru'] : product.name) 
+                  : (locale === 'ru' ? 'Общее ПО' : 'Umumiy dasturlar');
 
-                  {/* Driver cards */}
-                  <div className="grid grid-cols-1 gap-4 max-w-2xl mx-auto">
-                    {product.drivers!.map((driver, dIdx) => (
-                      <a
-                        key={dIdx}
-                        href={driver.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-between p-5 rounded-2xl bg-secondary/50 border border-border hover:border-primary/50 hover:bg-secondary/80 transition-all group"
-                      >
-                        <div className="flex flex-col">
-                          <span className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                            {driver.name}
-                          </span>
-                          <span className="text-sm text-muted-foreground mt-1">
-                            {locale === 'ru' ? 'Скачать с офиц. сайта' : 'Rasmiy saytdan yuklab olish'}
-                          </span>
-                        </div>
-                        <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center group-hover:bg-primary/20 transition-colors flex-shrink-0 ml-4">
-                          <Download className="w-5 h-5 text-primary" />
-                        </div>
-                      </a>
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
+                return (
+                  <motion.a
+                    key={driver.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: dIdx * 0.03 }}
+                    href={driver.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-6 rounded-2xl bg-secondary/50 border border-border hover:border-primary/50 hover:bg-secondary/80 transition-all group"
+                  >
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-foreground group-hover:text-primary transition-colors text-lg">
+                        {driver.name}
+                      </span>
+                      <span className="text-sm text-muted-foreground mt-1">
+                        {productName}
+                      </span>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center group-hover:bg-primary/20 transition-colors flex-shrink-0 ml-4">
+                      <Download className="w-5 h-5 text-primary" />
+                    </div>
+                  </motion.a>
+                )
+              })}
             </div>
           )}
         </div>

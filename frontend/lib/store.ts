@@ -51,6 +51,7 @@ interface StoreState {
   // Data from Backend
   products: Product[]
   categories: Category[]
+  drivers: { id: number; name: string; url: string; product: number | null }[]
   globalDrivers: { name: string; url: string }[]
   isLoading: boolean
   fetchData: () => Promise<void>
@@ -145,6 +146,7 @@ export const useStore = create<StoreState>()((set, get) => ({
   // Data from Backend
   products: [],
   categories: [],
+  drivers: [],
   globalDrivers: [],
   isLoading: true,
   fetchData: async () => {
@@ -209,6 +211,13 @@ export const useStore = create<StoreState>()((set, get) => ({
         .filter((d: any) => d.product === null)
         .map((d: any) => ({ name: d.name, url: d.url }))
 
+      const parsedDrivers = rawDrivers.map((d: any) => ({
+        id: d.id,
+        name: d.name,
+        url: d.url,
+        product: d.product
+      }))
+
       // Count products per category
       parsedCategories.forEach(cat => {
         cat.productCount = parsedProducts.filter(p => p.category === cat.slug || p.category === String(cat.id)).length
@@ -217,6 +226,7 @@ export const useStore = create<StoreState>()((set, get) => ({
       set({ 
         categories: parsedCategories, 
         products: parsedProducts, 
+        drivers: parsedDrivers,
         globalDrivers: parsedGlobalDrivers, 
         isLoading: false 
       })
