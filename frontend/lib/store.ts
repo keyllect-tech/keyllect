@@ -152,15 +152,30 @@ export const useStore = create<StoreState>()((set, get) => ({
   fetchData: async () => {
     try {
       set({ isLoading: true })
-      const [catRes, prodRes, driversRes] = await Promise.all([
-        fetch(apiUrl('/api/categories/')),
-        fetch(apiUrl('/api/products/')),
-        fetch(apiUrl('/api/drivers/'))
-      ])
       
-      const rawCategories = await catRes.json()
-      const rawProducts = await prodRes.json()
-      const rawDrivers = await driversRes.json()
+      let rawCategories = []
+      let rawProducts = []
+      let rawDrivers = []
+
+      try {
+        const [catRes, prodRes] = await Promise.all([
+          fetch(apiUrl('/api/categories/')),
+          fetch(apiUrl('/api/products/'))
+        ])
+        rawCategories = await catRes.json()
+        rawProducts = await prodRes.json()
+      } catch (err) {
+        console.error("Failed to fetch categories/products:", err)
+      }
+
+      try {
+        const driversRes = await fetch(apiUrl('/api/drivers/'))
+        if (driversRes.ok) {
+          rawDrivers = await driversRes.json()
+        }
+      } catch (err) {
+        console.error("Failed to fetch drivers endpoint:", err)
+      }
 
       const parsedCategories: Category[] = rawCategories.map((c: any) => ({
         id: String(c.id),
@@ -207,16 +222,25 @@ export const useStore = create<StoreState>()((set, get) => ({
       })
 
       // Filter global drivers (where product is null)
-      const parsedGlobalDrivers = rawDrivers
-        .filter((d: any) => d.product === null)
-        .map((d: any) => ({ name: d.name, url: d.url }))
+      const parsedGlobalDrivers = rawDrivers.length > 0
+        ? rawDrivers
+            .filter((d: any) => d.product === null)
+            .map((d: any) => ({ name: d.name, url: d.url }))
+        : []
 
-      const parsedDrivers = rawDrivers.map((d: any) => ({
-        id: d.id,
-        name: d.name,
-        url: d.url,
-        product: d.product
-      }))
+      const parsedDrivers = rawDrivers.length > 0
+        ? rawDrivers.map((d: any) => ({
+            id: d.id,
+            name: d.name,
+            url: d.url,
+            product: d.product
+          }))
+        : parsedProducts.flatMap(p => p.drivers.map((d: any) => ({
+            id: Math.random(),
+            name: d.name,
+            url: d.url,
+            product: Number(p.id)
+          })))
 
       // Count products per category
       parsedCategories.forEach(cat => {
