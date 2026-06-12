@@ -12,12 +12,35 @@ import { getTranslation } from '@/lib/i18n'
 import Link from 'next/link'
 
 export default function DriversPage() {
-  const { locale, products, isLoading } = useStore()
+  const { locale, products, globalDrivers, isLoading } = useStore()
   const t = getTranslation(locale)
   const [search, setSearch] = useState('')
 
   // Collect all products that have drivers
-  const productsWithDrivers = products.filter(p => p.drivers && p.drivers.length > 0)
+  const productsWithDrivers = [...products.filter(p => p.drivers && p.drivers.length > 0)]
+
+  // If there are global drivers, append them as a virtual product
+  if (globalDrivers && globalDrivers.length > 0) {
+    productsWithDrivers.push({
+      id: 'global',
+      name: {
+        ru: 'Общие драйверы и утилиты',
+        uz: 'Umumiy drayverlar va dasturlar'
+      },
+      description: { ru: '', uz: '' },
+      price: 0,
+      images: [],
+      category: 'drivers',
+      brand: 'Keyllect',
+      rating: 5,
+      reviewsCount: 0,
+      stock: 1,
+      inStock: true,
+      specifications: [],
+      colors: [],
+      drivers: globalDrivers
+    })
+  }
 
   // Filter by search
   const filtered = productsWithDrivers.filter(p => {
@@ -93,12 +116,18 @@ export default function DriversPage() {
                 >
                   {/* Product name */}
                   <div className="flex items-center gap-3 mb-4">
-                    <Link
-                      href={`/product/${product.id}`}
-                      className="text-xl font-bold text-foreground hover:text-primary transition-colors"
-                    >
-                      {typeof product.name === 'object' ? (product.name as any)[locale] || (product.name as any)['ru'] : product.name}
-                    </Link>
+                    {product.id === 'global' ? (
+                      <span className="text-xl font-bold text-foreground">
+                        {typeof product.name === 'object' ? (product.name as any)[locale] || (product.name as any)['ru'] : product.name}
+                      </span>
+                    ) : (
+                      <Link
+                        href={`/product/${product.id}`}
+                        className="text-xl font-bold text-foreground hover:text-primary transition-colors"
+                      >
+                        {typeof product.name === 'object' ? (product.name as any)[locale] || (product.name as any)['ru'] : product.name}
+                      </Link>
+                    )}
                     <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
                       {product.drivers!.length} {locale === 'ru' ? 'файл' : 'fayl'}
                     </span>

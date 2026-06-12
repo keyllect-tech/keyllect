@@ -1,11 +1,12 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CategoryViewSet, ProductViewSet, OrderViewSet, RegisterView, LoginView, GoogleLoginView, CheckoutAPIView, MyOrdersAPIView, SubmitReviewAPIView
+from .views import CategoryViewSet, ProductViewSet, OrderViewSet, RegisterView, LoginView, GoogleLoginView, CheckoutAPIView, MyOrdersAPIView, SubmitReviewAPIView, ProductDriverViewSet
 
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet)
 router.register(r'products', ProductViewSet)
 router.register(r'orders', OrderViewSet)
+router.register(r'drivers', ProductDriverViewSet)
 
 urlpatterns = [
     path('auth/register/', RegisterView.as_view(), name='register'),

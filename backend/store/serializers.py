@@ -23,14 +23,7 @@ class ProductDriverSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
-    drivers = serializers.SerializerMethodField()
-    
-    def get_drivers(self, obj):
-        specific_drivers = obj.drivers.all()
-        global_drivers = ProductDriver.objects.filter(product__isnull=True)
-        # Combine and remove duplicates if any (though usually distinct)
-        all_drivers = (specific_drivers | global_drivers).distinct()
-        return ProductDriverSerializer(all_drivers, many=True).data
+    drivers = ProductDriverSerializer(many=True, read_only=True)
     category_details = CategorySerializer(source='category', read_only=True)
     category_slug = serializers.SlugRelatedField(
         source='category', slug_field='slug', read_only=True

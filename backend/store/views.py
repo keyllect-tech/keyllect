@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
-from .models import Category, Product, Order
-from .serializers import CategorySerializer, ProductSerializer, OrderSerializer
+from .models import Category, Product, Order, ProductDriver
+from .serializers import CategorySerializer, ProductSerializer, OrderSerializer, ProductDriverSerializer
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -20,6 +20,11 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     lookup_field = 'slug'
     filterset_fields = ['category__slug', 'brand', 'in_stock']
+
+class ProductDriverViewSet(viewsets.ModelViewSet):
+    queryset = ProductDriver.objects.all()
+    serializer_class = ProductDriverSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()

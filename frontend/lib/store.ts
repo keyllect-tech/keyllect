@@ -51,6 +51,7 @@ interface StoreState {
   // Data from Backend
   products: Product[]
   categories: Category[]
+  globalDrivers: { name: string; url: string }[]
   isLoading: boolean
   fetchData: () => Promise<void>
 }
@@ -144,17 +145,20 @@ export const useStore = create<StoreState>()((set, get) => ({
   // Data from Backend
   products: [],
   categories: [],
+  globalDrivers: [],
   isLoading: true,
   fetchData: async () => {
     try {
       set({ isLoading: true })
-      const [catRes, prodRes] = await Promise.all([
+      const [catRes, prodRes, driversRes] = await Promise.all([
         fetch(apiUrl('/api/categories/')),
-        fetch(apiUrl('/api/products/'))
+        fetch(apiUrl('/api/products/')),
+        fetch(apiUrl('/api/drivers/'))
       ])
       
       const rawCategories = await catRes.json()
       const rawProducts = await prodRes.json()
+      const rawDrivers = await driversRes.json()
 
       const parsedCategories: Category[] = rawCategories.map((c: any) => ({
         id: String(c.id),
@@ -200,12 +204,22 @@ export const useStore = create<StoreState>()((set, get) => ({
         }
       })
 
+      // Filter global drivers (where product is null)
+      const parsedGlobalDrivers = rawDrivers
+        .filter((d: any) => d.product === null)
+        .map((d: any) => ({ name: d.name, url: d.url }))
+
       // Count products per category
       parsedCategories.forEach(cat => {
         cat.productCount = parsedProducts.filter(p => p.category === cat.slug || p.category === String(cat.id)).length
       })
 
-      set({ categories: parsedCategories, products: parsedProducts, isLoading: false })
+      set({ 
+        categories: parsedCategories, 
+        products: parsedProducts, 
+        globalDrivers: parsedGlobalDrivers, 
+        isLoading: false 
+      })
     } catch (error) {
       console.error("Failed to fetch data:", error)
       set({ isLoading: false })
