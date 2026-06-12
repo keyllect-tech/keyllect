@@ -568,7 +568,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               <h2 className="text-2xl font-bold text-foreground mb-8 text-center">
                 {locale === 'ru' ? 'Драйверы и ПО' : 'Drayverlar va Dasturlar'}
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-6 max-w-2xl mx-auto">
                 {product.drivers.map((driver, idx) => (
                   <a
                     key={idx}

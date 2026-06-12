@@ -56,7 +56,7 @@ export function DriversSection() {
         </motion.div>
 
         {/* Drivers Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+        <div className="grid grid-cols-1 gap-4 max-w-2xl mx-auto mb-10">
           {driversPreview.map((driver, idx) => (
             <motion.a
               key={idx}
