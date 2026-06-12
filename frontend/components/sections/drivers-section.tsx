@@ -7,25 +7,23 @@ import { getTranslation } from '@/lib/i18n'
 import Link from 'next/link'
 
 export function DriversSection() {
-  const { locale, products } = useStore()
+  const { locale, products, drivers } = useStore()
   const t = getTranslation(locale)
 
-  // Get products that have drivers and collect first 6 drivers total
-  const driversPreview: { name: string; url: string; productName: string; productId: string | number }[] = []
-  for (const product of products) {
-    if (product.drivers && product.drivers.length > 0) {
-      for (const driver of product.drivers) {
-        driversPreview.push({
-          name: driver.name,
-          url: driver.url,
-          productName: typeof product.name === 'object' ? (product.name as any)[locale] || (product.name as any)['ru'] : product.name,
-          productId: product.id
-        })
-        if (driversPreview.length >= 3) break
-      }
+  // Get first 3 drivers from the store
+  const driversPreview = drivers.slice(0, 3).map(driver => {
+    const product = products.find(p => p.id === String(driver.product))
+    const productName = product 
+      ? (typeof product.name === 'object' ? (product.name as any)[locale] || (product.name as any)['ru'] : product.name) 
+      : (locale === 'ru' ? 'Общее ПО' : 'Umumiy dasturlar')
+    
+    return {
+      name: driver.name,
+      url: driver.url,
+      productName,
+      productId: driver.product || 'global'
     }
-    if (driversPreview.length >= 3) break
-  }
+  })
 
   if (driversPreview.length === 0) return null
 
