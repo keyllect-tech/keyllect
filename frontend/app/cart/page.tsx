@@ -14,7 +14,7 @@ export default function CartPage() {
   const { locale, cart, updateQuantity, removeFromCart, getCartTotal } = useStore()
   const t = getTranslation(locale)
   const cartTotal = getCartTotal()
-  const shippingCost = cartTotal >= 500000 ? 0 : 50000
+  const shippingCost = 0
 
   return (
     <>
@@ -156,32 +156,10 @@ export default function CartPage() {
                     {locale === 'ru' ? 'Ваш заказ' : 'Sizning buyurtmangiz'}
                   </h2>
 
-                  <div className="space-y-4 mb-6">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">{t.cart.subtotal}</span>
-                      <span className="font-medium text-foreground">
-                        {formatPrice(cartTotal, locale)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">{t.cart.shipping}</span>
-                      <span className="font-medium text-foreground">
-                        {shippingCost === 0 ? t.cart.free : formatPrice(shippingCost, locale)}
-                      </span>
-                    </div>
-                    {shippingCost > 0 && (
-                      <p className="text-xs text-muted-foreground">
-                        {locale === 'ru' 
-                          ? `Бесплатная доставка от ${formatPrice(500000, locale)}` 
-                          : `${formatPrice(500000, locale)} dan bepul yetkazib berish`}
-                      </p>
-                    )}
-                  </div>
-
                   <div className="flex justify-between py-4 border-t border-border mb-6">
                     <span className="text-lg font-semibold text-foreground">{t.cart.total}</span>
                     <span className="text-lg font-bold text-foreground">
-                      {formatPrice(cartTotal + shippingCost, locale)}
+                      {formatPrice(cartTotal, locale)}
                     </span>
                   </div>
 

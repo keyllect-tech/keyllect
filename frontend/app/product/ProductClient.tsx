@@ -26,13 +26,14 @@ import { getTranslation, formatPrice } from '@/lib/i18n'
 import { getProductById, getProductsByCategory } from '@/lib/data'
 import { apiUrl } from '@/lib/api'
 import { Button } from '@/components/ui/button'
-import { notFound } from 'next/navigation'
+import { notFound, useRouter } from 'next/navigation'
 
 interface ProductPageProps {
   id: string
 }
 
 export default function ProductClient({ id }: ProductPageProps) {
+  const router = useRouter()
   const { locale, addToCart, toggleFavorite, isFavorite, products, isLoading } = useStore()
   
   const product = getProductById(products, id)
@@ -348,15 +349,17 @@ export default function ProductClient({ id }: ProductPageProps) {
               </div>
 
               {/* Buy Now */}
-              <Link href="/checkout">
-                <Button
-                  variant="outline"
-                  className="w-full h-14 text-base rounded-xl border-border hover:bg-secondary"
-                  onClick={() => addToCart(product, quantity)}
-                >
-                  {t.products.buyNow}
-                </Button>
-              </Link>
+              <Button
+                variant="outline"
+                disabled={!product.inStock || product.stock <= 0}
+                className="w-full h-14 text-base rounded-xl border-border hover:bg-secondary disabled:opacity-50"
+                onClick={() => {
+                  addToCart(product, quantity, selectedColor, product.images[selectedImage])
+                  router.push('/checkout')
+                }}
+              >
+                {t.products.buyNow}
+              </Button>
 
               {/* Features */}
               <div className="grid grid-cols-3 gap-4 pt-4">

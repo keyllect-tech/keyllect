@@ -16,7 +16,7 @@ export default function CheckoutPage() {
   const { locale, cart, getCartTotal, clearCart, user } = useStore()
   const t = getTranslation(locale)
   const cartTotal = getCartTotal()
-  const shippingCost = cartTotal >= 500000 ? 0 : 50000
+  const shippingCost = 0
   
   const [step, setStep] = useState(1)
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card'>('cash')
@@ -34,7 +34,11 @@ export default function CheckoutPage() {
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    let value = e.target.value
+    if (e.target.name === 'phone') {
+      value = value.replace(/[^0-9+]/g, '')
+    }
+    setFormData({ ...formData, [e.target.name]: value })
   }
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -47,6 +51,7 @@ export default function CheckoutPage() {
     try {
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
+        'Accept-Language': locale,
       }
       if (user?.token) {
         headers['Authorization'] = `Bearer ${user.token}`
@@ -75,9 +80,13 @@ export default function CheckoutPage() {
       // If token expired (401), fallback to guest checkout so order is not lost
       if (response.status === 401 && headers['Authorization']) {
         // If failed with 401, token might be invalid. Try without token.
+        const guestHeaders: Record<string, string> = {
+          'Content-Type': 'application/json',
+          'Accept-Language': locale,
+        }
         response = await fetch(apiUrl('/api/checkout/'), {
           method: 'POST',
-          headers,
+          headers: guestHeaders,
           body: JSON.stringify({
             order_number: newOrderNumber,
             client_name: `${formData.firstName} ${formData.lastName}`.trim(),
@@ -103,7 +112,7 @@ export default function CheckoutPage() {
       } else {
         const errorData = await response.json()
         console.error("Backend error:", errorData)
-        alert(locale === 'ru' ? 'Ошибка при оформлении заказа' : 'Buyurtma berishda xatolik')
+        alert(errorData.error || (locale === 'ru' ? 'Ошибка при оформлении заказа' : 'Buyurtma berishda xatolik'))
       }
     } catch (error) {
       console.error("Network error:", error)
@@ -453,23 +462,10 @@ export default function CheckoutPage() {
                   ))}
                 </div>
 
-                <div className="space-y-3 py-4 border-t border-border">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{t.cart.subtotal}</span>
-                    <span className="text-foreground">{formatPrice(cartTotal, locale)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{t.cart.shipping}</span>
-                    <span className="text-foreground">
-                      {shippingCost === 0 ? t.cart.free : formatPrice(shippingCost, locale)}
-                    </span>
-                  </div>
-                </div>
-
                 <div className="flex justify-between pt-4 border-t border-border">
                   <span className="text-lg font-semibold text-foreground">{t.cart.total}</span>
                   <span className="text-lg font-bold text-foreground">
-                    {formatPrice(cartTotal + shippingCost, locale)}
+                    {formatPrice(cartTotal, locale)}
                   </span>
                 </div>
               </motion.div>

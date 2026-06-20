@@ -129,57 +129,93 @@ class CheckoutAPIView(APIView):
 
     def post(self, request):
         data = request.data
+        lang = request.headers.get('Accept-Language', 'ru')
+        
         try:
-            # Try to get the customer if user is authenticated
-            customer = None
-            if request.user.is_authenticated:
-                try:
-                    from .models import Customer
-                    customer = Customer.objects.get(user=request.user)
-                except:
-                    pass
-
-            # Create order without strict item foreign key validation
-            order = Order.objects.create(
-                order_number=data.get('order_number'),
-                customer=customer,
-                client_name=data.get('client_name'),
-                phone=data.get('phone'),
-                address=data.get('address'),
-                total_amount=data.get('total_amount', 0),
-            )
-            
-            # We skip creating OrderItems in DB because frontend uses mock data
-            # Instead, we directly parse items for Telegram
             items = data.get('items', [])
+            if not items:
+                error_msg = "Savat bo'sh" if lang == 'uz' else "Корзина пуста"
+                return Response({'error': error_msg}, status=status.HTTP_400_BAD_REQUEST)
             
-            items_list = []
-            for i, item in enumerate(items, start=1):
-                name = item.get('name', 'Товар')
-                color = item.get('selectedColor')
-                qty = item.get('quantity', 1)
-                
-                try:
+            from django.db import transaction
+            from .models import Product, OrderItem
+            
+            validated_items = []
+            
+            # Start database transaction to lock rows and validate stock
+            with transaction.atomic():
+                for item in items:
                     product_id = item.get('product_id')
-                    if product_id:
-                        from .models import Product
-                        product = Product.objects.get(id=product_id)
-                        if product.stock >= qty:
-                            product.stock -= qty
+                    qty = int(item.get('quantity', 1))
+                    
+                    if not product_id:
+                        error_msg = "Noto'g'ri mahsulot IDsi" if lang == 'uz' else "Некорректный ID товара"
+                        return Response({'error': error_msg}, status=status.HTTP_400_BAD_REQUEST)
+                    
+                    try:
+                        product = Product.objects.select_for_update().get(id=product_id)
+                    except Product.DoesNotExist:
+                        error_msg = "Mahsulot topilmadi" if lang == 'uz' else "Товар не найден"
+                        return Response({'error': error_msg}, status=status.HTTP_400_BAD_REQUEST)
+                    
+                    if product.stock < qty or not product.in_stock or product.stock <= 0:
+                        product_name = product.name_uz if lang == 'uz' and product.name_uz else product.name
+                        if lang == 'uz':
+                            if product.stock <= 0 or not product.in_stock:
+                                error_msg = f"'{product_name}' mahsuloti omborda qolmagan."
+                            else:
+                                error_msg = f"Omborda '{product_name}' mahsulotidan yetarli emas. Mavjud: {product.stock} ta."
                         else:
-                            product.stock = 0
-                        
-                        if product.stock == 0:
-                            product.in_stock = False
-                            
-                        product.save()
-                except Exception as e:
-                    print(f"Failed to reduce stock: {e}")
+                            if product.stock <= 0 or not product.in_stock:
+                                error_msg = f"Товара '{product_name}' нет в наличии."
+                            else:
+                                error_msg = f"Недостаточно товара '{product_name}' на складе. Доступно: {product.stock} шт."
+                        return Response({'error': error_msg}, status=status.HTTP_400_BAD_REQUEST)
+                    
+                    validated_items.append((product, qty, item))
                 
-                color_text = f" ({color})" if color else ""
-                items_list.append(f"{i}. {name}{color_text} × {qty}")
-            
-            items_text = "\n".join(items_list)
+                # If all items are valid, create the Order
+                # Try to get the customer if user is authenticated
+                customer = None
+                if request.user.is_authenticated:
+                    try:
+                        from .models import Customer
+                        customer = Customer.objects.get(user=request.user)
+                    except:
+                        pass
+                
+                order = Order.objects.create(
+                    order_number=data.get('order_number'),
+                    customer=customer,
+                    client_name=data.get('client_name'),
+                    phone=data.get('phone'),
+                    address=data.get('address'),
+                    total_amount=data.get('total_amount', 0),
+                )
+                
+                items_list = []
+                for idx, (product, qty, item) in enumerate(validated_items, start=1):
+                    # Decrement stock
+                    product.stock -= qty
+                    if product.stock <= 0:
+                        product.stock = 0
+                        product.in_stock = False
+                    product.save()
+                    
+                    # Create OrderItem in DB so it shows up in Django admin
+                    OrderItem.objects.create(
+                        order=order,
+                        product=product,
+                        quantity=qty,
+                        price=item.get('price', product.price)
+                    )
+                    
+                    name = item.get('name', product.name)
+                    color = item.get('selectedColor')
+                    color_text = f" ({color})" if color else ""
+                    items_list.append(f"{idx}. {name}{color_text} × {qty}")
+                
+                items_text = "\n".join(items_list)
             
             # Send Telegram notification
             import os
@@ -205,7 +241,7 @@ class CheckoutAPIView(APIView):
                 
                 # Get unique images, max 10
                 image_urls = []
-                for item in items:
+                for product, qty, item in validated_items:
                     img = item.get('image')
                     if img and img not in image_urls:
                         image_urls.append(img)

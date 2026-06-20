@@ -86,11 +86,20 @@ export const useStore = create<StoreState>()((set, get) => ({
     const itemId = selectedColor ? `${product.id}-${selectedColor}` : product.id;
     const existingItem = cart.find((item) => item.id === itemId)
     
+    const newQty = existingItem ? existingItem.quantity + quantity : quantity;
+    if (newQty > product.stock) {
+      alert(get().locale === 'ru' 
+        ? `Нельзя добавить больше, чем есть в наличии (доступно: ${product.stock})`
+        : `Mavjud bo'lganidan ortiq qo'sha olmaysiz (mavjud: ${product.stock})`
+      )
+      return
+    }
+
     if (existingItem) {
       set({
         cart: cart.map((item) =>
           item.id === itemId
-            ? { ...item, quantity: item.quantity + quantity, selectedImage: selectedImage || item.selectedImage }
+            ? { ...item, quantity: newQty, selectedImage: selectedImage || item.selectedImage }
             : item
         ),
       })
@@ -104,6 +113,14 @@ export const useStore = create<StoreState>()((set, get) => ({
   updateQuantity: (itemId, quantity) => {
     if (quantity <= 0) {
       get().removeFromCart(itemId)
+      return
+    }
+    const item = get().cart.find((i) => i.id === itemId)
+    if (item && quantity > item.product.stock) {
+      alert(get().locale === 'ru' 
+        ? `Максимальное доступное количество: ${item.product.stock}`
+        : `Maksimal mavjud miqdor: ${item.product.stock}`
+      )
       return
     }
     set({
