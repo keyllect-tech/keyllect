@@ -141,18 +141,18 @@ export default function AboutPage() {
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
                   {locale === 'ru'
-                    ? 'Keyllect был основан в 2021 году группой энтузиастов, объединённых общей страстью к качественной компьютерной периферии. Мы начинали как небольшой магазин, специализирующийся на механических клавиатурах, но быстро расширили ассортимент, включив игровые мыши, наушники и аксессуары.'
-                    : "Keyllect 2021-yilda sifatli kompyuter periferiyasiga bo'lgan umumiy ishtiyoq bilan birlashgan ixlosmandlar guruhi tomonidan tashkil etilgan. Biz mexanik klaviaturalarga ixtisoslashgan kichik do'kon sifatida boshladik, lekin tezda assortimentni kengaytirib, o'yin sichqonchalari, quloqliklar va aksessuarlarni qo'shdik."}
+                    ? 'Keyllect — магазин игровой периферии из Ташкента, основанный в 2025 году. Мы объединяем людей, которые разбираются в периферии и искренне любят то, чем занимаются.'
+                    : "Keyllect — 2025 yilda tashkil etilgan Toshkentdagi o'yin periferiyasi do'koni. Biz periferiyani tushunadigan va o'z ishini chin dildan sevadigan odamlarni birlashtiramiz."}
                 </p>
                 <p>
                   {locale === 'ru'
-                    ? 'Сегодня мы являемся официальными партнёрами ведущих мировых брендов, таких как Logitech, Razer, SteelSeries, HyperX и других. Наша команда тщательно отбирает каждый продукт, чтобы предложить вам только лучшее оборудование для работы и игр.'
-                    : "Bugun biz Logitech, Razer, SteelSeries, HyperX va boshqalar kabi yetakchi jahon brendlarining rasmiy hamkorlarimiz. Bizning jamoamiz sizga ish va o'yinlar uchun eng yaxshi uskunalarni taklif qilish uchun har bir mahsulotni sinchkovlik bilan tanlaydi."}
+                    ? 'Мы тщательно отбираем каждый продукт — клавиатуры, мыши, наушники, коврики и аксессуары ведущих мировых брендов. Наша цель — чтобы каждый покупатель получил именно то оборудование, которое подходит ему: для игр, работы или киберспорта.'
+                    : "Biz har bir mahsulotni — yetakchi jahon brendlarining klaviaturalari, sichqonchalari, quloqliklari, gilamchalari va aksessuarlarini sinchkovlik bilan tanlaymiz. Bizning maqsadimiz — har bir xaridor o'zi uchun mos uskunani olishini ta'minlash: o'yin, ish yoki kibersport uchun."}
                 </p>
                 <p>
                   {locale === 'ru'
-                    ? 'Мы верим, что правильно подобранная периферия способна значительно улучшить ваш пользовательский опыт — будь то профессиональная работа, киберспорт или творчество. Именно поэтому мы уделяем особое внимание консультациям и готовы помочь каждому клиенту найти идеальное решение.'
-                    : "Biz to'g'ri tanlangan periferiya sizning foydalanuvchi tajribangizni sezilarli darajada yaxshilashiga ishonamiz — bu professional ish, kibersport yoki ijod bo'ladimi. Shuning uchun biz maslahatlarga alohida e'tibor beramiz va har bir mijozga ideal yechim topishda yordam berishga tayyormiz."}
+                    ? 'Мы готовы помочь с выбором и ответить на любые вопросы.'
+                    : "Biz tanlashda yordam berishga va har qanday savollarga javob berishga tayyormiz."}
                 </p>
               </div>
             </div>
