@@ -203,6 +203,19 @@ export const translations = {
       q5: 'Что делать если товар пришёл с дефектом?',
       a5: 'Свяжитесь с нами — организуем возврат или обмен.',
     },
+    // Privacy Page
+    privacyPage: {
+      title: 'Политика конфиденциальности',
+      p1: 'Keyllect уважает вашу конфиденциальность. При оформлении заказа мы собираем только необходимые данные: имя, контактный номер и адрес доставки. Эти данные используются исключительно для обработки и доставки вашего заказа и не передаются третьим лицам.',
+      p2: 'Обращаясь к нам через Telegram, Instagram или телефон, вы соглашаетесь на обработку указанных данных в целях выполнения заказа.',
+    },
+    // Terms Page
+    termsPage: {
+      title: 'Условия использования',
+      p1: 'Используя сайт keyllect.com, вы соглашаетесь с настоящими условиями. Весь контент на сайте — фотографии, описания, цены — является собственностью Keyllect и не может быть использован без разрешения.',
+      p2: 'Цены и наличие товаров могут меняться. Актуальную информацию уточняйте у менеджера.',
+      p3: 'Keyllect оставляет за собой право отказать в обслуживании при нарушении условий или недобросовестном использовании сервиса.',
+    },
     // Common
     common: {
       currency: 'сум',
@@ -417,6 +430,19 @@ export const translations = {
       a4: 'Ha — Toshkentda shourumimiz bor. Keling, ko\'ring va o\'zingiz olib keting. Manzilni menejerdan aniqlang.',
       q5: 'Agar mahsulot nuqsonli kelsa nima qilish kerak?',
       a5: 'Biz bilan bog\'laning — qaytarish yoki almashtirishni tashkil qilamiz.',
+    },
+    // Privacy Page
+    privacyPage: {
+      title: 'Maxfiylik siyosati',
+      p1: "Keyllect sizning maxfiyligingizni hurmat qiladi. Buyurtmani rasmiylashtirishda biz faqat kerakli ma'lumotlarni yig'amiz: ism, aloqa raqami va yetkazib berish manzili. Bu ma'lumotlar faqat buyurtmangizni qayta ishlash va yetkazib berish uchun ishlatiladi va uchinchi shaxslarga berilmaydi.",
+      p2: "Bizga Telegram, Instagram yoki telefon orqali murojaat qilib, buyurtmani bajarish maqsadida ko'rsatilgan ma'lumotlarni qayta ishlashga rozilik bildirasiz.",
+    },
+    // Terms Page
+    termsPage: {
+      title: 'Foydalanish shartlari',
+      p1: "keyllect.com saytidan foydalanib, siz ushbu shartlarga rozilik bildirasiz. Saytdagi barcha kontent — fotosuratlar, tavsiflar, narxlar — Keyllect mulki hisoblanadi va ruxsatsiz ishlatilishi mumkin emas.",
+      p2: "Tovarlar narxi va mavjudligi o'zgarishi mumkin. Dolzarb ma'lumotlarni menejerdan aniqlang.",
+      p3: "Keyllect shartlar buzilganda yoki xizmatdan vijdonsiz foydalanilganda xizmat ko'rsatishni rad etish huquqini o'zida saqlab qoladi.",
     },
     // Common
     common: {
