@@ -182,6 +182,13 @@ export const translations = {
       message: 'Сообщение',
       send: 'Отправить',
     },
+    // Delivery Page
+    deliveryPage: {
+      title: 'Доставка и оплата',
+      delivery: 'Доставка осуществляется по всему Узбекистану. Стоимость и сроки зависят от вашего города и уточняются при оформлении заказа.',
+      payment: 'Оплата принимается переводом на карту.',
+      pickup: 'Самовывоз — у нас есть шоурум в Ташкенте, где вы можете вживую посмотреть товар и забрать заказ самостоятельно. Адрес и время работы уточняйте у менеджера.',
+    },
     // Common
     common: {
       currency: 'сум',
@@ -375,6 +382,13 @@ export const translations = {
       name: 'Ismingiz',
       message: 'Xabar',
       send: 'Yuborish',
+    },
+    // Delivery Page
+    deliveryPage: {
+      title: 'Yetkazib berish va to\'lov',
+      delivery: 'Yetkazib berish butun O\'zbekiston bo\'ylab amalga oshiriladi. Narxi va muddati shahringizga bog\'liq bo\'lib, buyurtmani rasmiylashtirishda aniqlanadi.',
+      payment: 'To\'lov karta orqali qabul qilinadi.',
+      pickup: 'Olib ketish — Toshkentda shourumimiz bor, u yerda tovarlarni jonli ko\'rishingiz va buyurtmani o\'zingiz olib ketishingiz mumkin. Manzil va ish vaqtini menejerdan aniqlang.',
     },
     // Common
     common: {
