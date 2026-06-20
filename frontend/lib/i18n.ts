@@ -189,6 +189,20 @@ export const translations = {
       payment: 'Оплата принимается переводом на карту.',
       pickup: 'Самовывоз — у нас есть шоурум в Ташкенте, где вы можете вживую посмотреть товар и забрать заказ самостоятельно. Адрес и время работы уточняйте у менеджера.',
     },
+    // FAQ Page
+    faqPage: {
+      title: 'Часто задаваемые вопросы',
+      q1: 'Как оформить заказ?',
+      a1: 'Напишите нам в Telegram или Instagram — укажите нужный товар, и мы оформим всё вместе.',
+      q2: 'Как оплатить?',
+      a2: 'Переводом на карту.',
+      q3: 'Доставляете ли вы в мой город?',
+      a3: 'Да, доставляем по всему Узбекистану. Стоимость и сроки уточняются при заказе.',
+      q4: 'Можно ли посмотреть товар вживую?',
+      a4: 'Да — у нас есть шоурум в Ташкенте. Приходите, посмотрите и заберите сами. Адрес уточняйте у менеджера.',
+      q5: 'Что делать если товар пришёл с дефектом?',
+      a5: 'Свяжитесь с нами — организуем возврат или обмен.',
+    },
     // Common
     common: {
       currency: 'сум',
@@ -389,6 +403,20 @@ export const translations = {
       delivery: 'Yetkazib berish butun O\'zbekiston bo\'ylab amalga oshiriladi. Narxi va muddati shahringizga bog\'liq bo\'lib, buyurtmani rasmiylashtirishda aniqlanadi.',
       payment: 'To\'lov karta orqali qabul qilinadi.',
       pickup: 'Olib ketish — Toshkentda shourumimiz bor, u yerda tovarlarni jonli ko\'rishingiz va buyurtmani o\'zingiz olib ketishingiz mumkin. Manzil va ish vaqtini menejerdan aniqlang.',
+    },
+    // FAQ Page
+    faqPage: {
+      title: "Ko'p so'raladigan savollar",
+      q1: 'Qanday qilib buyurtma berish mumkin?',
+      a1: 'Telegram yoki Instagram orqali bizga yozing - kerakli mahsulotni ko\'rsating va biz hamma narsani birgalikda rasmiylashtiramiz.',
+      q2: 'Qanday to\'lash kerak?',
+      a2: 'Karta orqali o\'tkazma bilan.',
+      q3: 'Mening shahrimga yetkazib berasizmi?',
+      a3: 'Ha, O\'zbekiston bo\'ylab yetkazib beramiz. Narxi va muddati buyurtma berishda aniqlanadi.',
+      q4: 'Mahsulotni jonli ko\'rish mumkinmi?',
+      a4: 'Ha — Toshkentda shourumimiz bor. Keling, ko\'ring va o\'zingiz olib keting. Manzilni menejerdan aniqlang.',
+      q5: 'Agar mahsulot nuqsonli kelsa nima qilish kerak?',
+      a5: 'Biz bilan bog\'laning — qaytarish yoki almashtirishni tashkil qilamiz.',
     },
     // Common
     common: {
