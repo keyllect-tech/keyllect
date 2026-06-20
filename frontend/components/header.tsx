@@ -135,7 +135,7 @@ export function Header() {
                 onClick={toggleLocale}
                 className="text-muted-foreground hover:text-foreground"
               >
-                <Globe className="w-5 h-5" />
+                <span className="font-bold uppercase text-sm">{locale}</span>
                 <span className="sr-only">
                   {locale === 'ru' ? 'Switch to Uzbek' : 'Русский тилига ўтиш'}
                 </span>
@@ -311,7 +311,7 @@ export function Header() {
                   onClick={toggleLocale}
                   className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-secondary transition-colors w-full"
                 >
-                  <Globe className="w-5 h-5" />
+                  <span className="font-bold uppercase text-sm w-5 text-center">{locale}</span>
                   <span>{locale === 'ru' ? "O'zbek tili" : 'Русский язык'}</span>
                 </button>
               </div>
