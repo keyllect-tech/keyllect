@@ -141,18 +141,13 @@ export default function AboutPage() {
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
                   {locale === 'ru'
-                    ? 'Keyllect — магазин игровой периферии из Ташкента, основанный в 2025 году. Мы объединяем людей, которые разбираются в периферии и искренне любят то, чем занимаются.'
-                    : "Keyllect — 2025 yilda tashkil etilgan Toshkentdagi o'yin periferiyasi do'koni. Biz periferiyani tushunadigan va o'z ishini chin dildan sevadigan odamlarni birlashtiramiz."}
+                    ? 'Keyllect появился в 2025 году — из любви к качественной периферии и желания сделать её доступной в Узбекистане. Мы начинали как небольшой проект, а сегодня обслуживаем как частных покупателей, так и игровые клубы по всей стране.'
+                    : "Keyllect 2025-yilda sifatli periferiyaga bo'lgan muhabbat va uni O'zbekistonda hamyonbop qilish istagi tufayli paydo bo'ldi. Biz kichik loyiha sifatida boshlaganmiz, bugungi kunda esa butun mamlakat bo'ylab ham xususiy xaridorlarga, ham o'yin klublariga xizmat ko'rsatamiz."}
                 </p>
                 <p>
                   {locale === 'ru'
-                    ? 'Мы тщательно отбираем каждый продукт — клавиатуры, мыши, наушники, коврики и аксессуары ведущих мировых брендов. Наша цель — чтобы каждый покупатель получил именно то оборудование, которое подходит ему: для игр, работы или киберспорта.'
-                    : "Biz har bir mahsulotni — yetakchi jahon brendlarining klaviaturalari, sichqonchalari, quloqliklari, gilamchalari va aksessuarlarini sinchkovlik bilan tanlaymiz. Bizning maqsadimiz — har bir xaridor o'zi uchun mos uskunani olishini ta'minlash: o'yin, ish yoki kibersport uchun."}
-                </p>
-                <p>
-                  {locale === 'ru'
-                    ? 'Мы готовы помочь с выбором и ответить на любые вопросы.'
-                    : "Biz tanlashda yordam berishga va har qanday savollarga javob berishga tayyormiz."}
+                    ? 'Каждый продукт в нашем каталоге проходит личную проверку — мы не продаём то, в чём не уверены сами.'
+                    : "Katalogimizdagi har bir mahsulot shaxsiy tekshiruvdan o'tadi — biz o'zimiz ishonch hosil qilmagan narsani sotmaymiz."}
                 </p>
               </div>
             </div>
